@@ -2,125 +2,144 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Whispr — Messages Anonymes</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Whispr</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --bg: #0a0a0f;
       --surface: #12121a;
       --surface2: #1a1a26;
-      --border: #ffffff10;
+      --border: #ffffff12;
       --accent: #7c5cfc;
       --accent2: #c084fc;
       --glow: #7c5cfc40;
       --text: #f0f0ff;
-      --muted: #8888aa;
+      --muted: #7777aa;
       --danger: #ff4f6a;
       --success: #4fefaa;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    body {
+    html, body {
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      position: fixed;
     }
 
-    /* ─── BACKGROUND ─── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 60% 40% at 20% 20%, #7c5cfc18 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 80% 80%, #c084fc12 0%, transparent 60%);
+        radial-gradient(ellipse 80% 40% at 20% 10%, #7c5cfc1a 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 90%, #c084fc10 0%, transparent 60%);
       pointer-events: none;
       z-index: 0;
     }
 
-    /* ─── PAGES ─── */
-    .page { display: none; min-height: 100vh; position: relative; z-index: 1; }
-    .page.active { display: flex; flex-direction: column; }
+    .page {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .page.active { display: flex; }
 
-    /* ─── NAV ─── */
-    nav {
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    .status-bar {
+      height: calc(var(--safe-top) + 54px);
+      min-height: 54px;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 20px 12px;
+      background: var(--bg)ee;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: relative;
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .status-bar-content {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 28px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg)cc;
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      width: 100%;
     }
 
     .logo {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 22px;
+      font-size: 20px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
     }
 
-    .nav-actions { display: flex; gap: 10px; align-items: center; }
-
-    /* ─── BUTTONS ─── */
     .btn {
-      padding: 10px 20px;
-      border-radius: 12px;
+      padding: 12px 20px;
+      border-radius: 14px;
       border: none;
       font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.1s, opacity 0.1s;
+      -webkit-user-select: none;
     }
+    .btn:active { transform: scale(0.96); opacity: 0.85; }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color: white;
       box-shadow: 0 4px 20px var(--glow);
     }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 28px var(--glow); }
-    .btn-primary:active { transform: translateY(0); }
 
     .btn-ghost {
-      background: transparent;
+      background: var(--surface);
       color: var(--muted);
       border: 1px solid var(--border);
+      font-size: 14px;
+      padding: 10px 16px;
     }
-    .btn-ghost:hover { background: var(--surface); color: var(--text); }
 
-    .btn-danger {
-      background: transparent;
-      color: var(--danger);
-      border: 1px solid var(--danger)40;
-      font-size: 13px;
-      padding: 8px 14px;
-    }
-    .btn-danger:hover { background: var(--danger)15; }
+    .btn-full { width: 100%; padding: 16px; border-radius: 16px; font-size: 16px; }
 
-    /* ─── INPUTS ─── */
     input, textarea {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      padding: 14px 16px;
+      font-size: 16px;
+      padding: 15px 16px;
       width: 100%;
       outline: none;
       transition: border-color 0.2s;
       resize: none;
+      -webkit-appearance: none;
     }
     input:focus, textarea:focus {
       border-color: var(--accent)80;
@@ -128,21 +147,15 @@
     }
     input::placeholder, textarea::placeholder { color: var(--muted); }
 
-    /* ─── CARDS ─── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px;
-    }
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; display: block; font-weight: 500; }
 
-    /* ═══════════════════════════════════════
-       PAGE 1 — LANDING
-    ═══════════════════════════════════════ */
-    #page-landing {
+    /* ── LANDING ── */
+    #page-landing .scroll-area {
+      padding: 36px 24px 48px;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
       text-align: center;
     }
 
@@ -153,726 +166,396 @@
       background: var(--surface);
       border: 1px solid var(--accent)30;
       border-radius: 100px;
-      padding: 6px 14px;
+      padding: 7px 16px;
       font-size: 13px;
       color: var(--accent2);
-      margin-bottom: 28px;
-      animation: fadeUp 0.6s ease both;
+      margin-bottom: 24px;
     }
 
     .hero-title {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(42px, 8vw, 76px);
+      font-size: 38px;
       font-weight: 800;
-      line-height: 1.0;
-      letter-spacing: -2px;
-      margin-bottom: 20px;
-      animation: fadeUp 0.6s 0.1s ease both;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 16px;
     }
-
     .hero-title span {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .hero-sub {
-      font-size: 17px;
-      color: var(--muted);
-      max-width: 440px;
-      line-height: 1.6;
-      margin: 0 auto 40px;
-      animation: fadeUp 0.6s 0.2s ease both;
-    }
+    .hero-sub { font-size: 16px; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
 
-    .hero-cta {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      animation: fadeUp 0.6s 0.3s ease both;
-    }
+    .hero-cta { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .hero-cta .btn { font-size: 16px; padding: 16px; border-radius: 16px; }
 
-    .hero-cta .btn { font-size: 16px; padding: 14px 28px; border-radius: 14px; }
-
-    .features {
-      display: flex;
-      gap: 16px;
-      margin-top: 72px;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 700px;
-      animation: fadeUp 0.6s 0.4s ease both;
-    }
-
+    .features { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; justify-content: center; }
     .feature-pill {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 10px 18px;
-      font-size: 14px;
-      color: var(--muted);
+      display: flex; align-items: center; gap: 7px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 100px; padding: 8px 14px; font-size: 13px; color: var(--muted);
     }
-    .feature-pill .dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
 
-    /* ═══════════════════════════════════════
-       PAGE 2 — AUTH
-    ═══════════════════════════════════════ */
-    #page-auth {
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-    }
+    /* ── AUTH ── */
+    #page-auth .scroll-area { padding: 32px 24px; padding-bottom: calc(var(--safe-bottom) + 32px); }
 
-    .auth-box {
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .auth-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .auth-sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
-
-    .form-group { margin-bottom: 16px; }
-    .form-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; display: block; }
+    .auth-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+    .auth-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
 
     .auth-divider {
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      margin: 20px 0;
-      position: relative;
+      text-align: center; color: var(--muted); font-size: 13px; margin: 18px 0; position: relative;
     }
     .auth-divider::before, .auth-divider::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      width: 42%;
-      height: 1px;
-      background: var(--border);
+      content: ''; position: absolute; top: 50%; width: 44%; height: 1px; background: var(--border);
     }
     .auth-divider::before { left: 0; }
     .auth-divider::after { right: 0; }
 
-    .auth-switch {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-    .auth-switch a {
-      color: var(--accent2);
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .auth-switch a:hover { text-decoration: underline; }
+    .auth-switch { text-align: center; margin-top: 20px; font-size: 14px; color: var(--muted); }
+    .auth-switch a { color: var(--accent2); cursor: pointer; }
 
-    /* ═══════════════════════════════════════
-       PAGE 3 — DASHBOARD
-    ═══════════════════════════════════════ */
-    #page-dashboard { padding: 0; }
-
-    .dash-content {
-      flex: 1;
-      padding: 28px;
-      max-width: 700px;
-      width: 100%;
-      margin: 0 auto;
-    }
+    /* ── DASHBOARD ── */
+    #page-dashboard .scroll-area { padding: 20px 18px; padding-bottom: calc(var(--safe-bottom) + 24px); }
 
     .link-card {
-      background: linear-gradient(135deg, var(--accent)20, var(--accent2)10);
+      background: linear-gradient(135deg, var(--accent)18, var(--accent2)08);
       border: 1px solid var(--accent)30;
       border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 28px;
-      animation: fadeUp 0.5s ease both;
+      padding: 20px;
+      margin-bottom: 24px;
     }
 
-    .link-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--accent2);
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
+    .link-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent2); font-weight: 600; margin-bottom: 12px; }
 
     .link-url {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--bg)80;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 16px;
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg)90; border: 1px solid var(--border); border-radius: 12px; padding: 11px 14px;
     }
-
-    .link-url span {
-      flex: 1;
-      font-size: 14px;
-      color: var(--text);
-      word-break: break-all;
-    }
+    .link-url span { flex: 1; font-size: 13px; word-break: break-all; }
 
     .copy-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-size: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s;
+      background: var(--accent); color: white; border: none; border-radius: 8px;
+      padding: 8px 13px; font-size: 12px; font-family: 'DM Sans', sans-serif;
+      font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s;
     }
-    .copy-btn:hover { background: var(--accent2); }
     .copy-btn.copied { background: var(--success); color: #000; }
 
     .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
+      margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
     }
 
-    .msg-count {
-      background: var(--accent)25;
-      color: var(--accent2);
-      border-radius: 100px;
-      padding: 3px 10px;
-      font-size: 12px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-    }
+    .msg-count { background: var(--accent)25; color: var(--accent2); border-radius: 100px; padding: 3px 10px; font-size: 12px; font-weight: 500; }
 
-    .message-list { display: flex; flex-direction: column; gap: 12px; }
+    .message-list { display: flex; flex-direction: column; gap: 10px; }
 
     .message-item {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 20px;
-      cursor: pointer;
-      transition: all 0.2s;
-      animation: fadeUp 0.4s ease both;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 16px; cursor: pointer; transition: background 0.15s; -webkit-user-select: none;
     }
-    .message-item:hover {
-      border-color: var(--accent)40;
-      background: var(--surface2);
-      transform: translateY(-1px);
-    }
+    .message-item:active { background: var(--surface2); }
     .message-item.unread { border-left: 3px solid var(--accent); }
 
     .msg-preview {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 8px;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      font-size: 15px; line-height: 1.4; margin-bottom: 10px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
 
-    .msg-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .msg-meta { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); }
+    .msg-tag { background: var(--surface2); border-radius: 100px; padding: 3px 10px; font-size: 11px; }
+    .msg-tag.replied { background: var(--success)18; color: var(--success); }
 
-    .msg-tag {
-      background: var(--surface2);
-      border-radius: 100px;
-      padding: 3px 10px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-    .msg-tag.replied { background: var(--success)20; color: var(--success); }
-
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px;
-      color: var(--muted);
-    }
-    .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+    .empty-state { text-align: center; padding: 52px 20px; color: var(--muted); }
+    .empty-icon { font-size: 44px; margin-bottom: 14px; }
     .empty-state p { font-size: 15px; line-height: 1.6; }
 
-    /* ═══════════════════════════════════════
-       PAGE 4 — CHAT
-    ═══════════════════════════════════════ */
-    #page-chat { padding: 0; }
-
-    .chat-header {
-      padding: 16px 24px;
+    /* ── CHAT ── */
+    .chat-topbar {
+      height: calc(var(--safe-top) + 56px);
+      min-height: 56px;
+      display: flex; align-items: flex-end;
+      padding: 0 16px 12px;
+      background: var(--bg)ee;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: var(--bg)cc;
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      gap: 12px; position: relative; z-index: 10; flex-shrink: 0;
     }
 
     .back-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.2s;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); width: 38px; height: 38px; display: flex;
+      align-items: center; justify-content: center; cursor: pointer;
+      font-size: 18px; flex-shrink: 0;
     }
-    .back-btn:hover { background: var(--surface2); }
+    .back-btn:active { background: var(--surface2); }
 
     .chat-info { flex: 1; }
-    .chat-info h3 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+    .chat-info h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
     .chat-info span { font-size: 12px; color: var(--muted); }
 
-    .chat-messages {
-      flex: 1;
-      padding: 24px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 700px;
-      width: 100%;
-      margin: 0 auto;
+    .del-btn {
+      background: transparent; border: 1px solid var(--danger)40; border-radius: 10px;
+      color: var(--danger); font-size: 13px; font-family: 'DM Sans', sans-serif;
+      padding: 7px 12px; cursor: pointer;
     }
+
+    #page-chat .scroll-area { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
 
     .chat-bubble {
-      max-width: 78%;
-      padding: 14px 18px;
-      border-radius: 20px;
-      font-size: 15px;
-      line-height: 1.5;
-      animation: fadeUp 0.3s ease both;
+      max-width: 82%; padding: 13px 16px; border-radius: 20px;
+      font-size: 15px; line-height: 1.5;
     }
-
     .bubble-anon {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-bottom-left-radius: 6px;
-      align-self: flex-start;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-bottom-left-radius: 6px; align-self: flex-start;
     }
-
     .bubble-me {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: white;
-      border-bottom-right-radius: 6px;
-      align-self: flex-end;
+      color: white; border-bottom-right-radius: 6px; align-self: flex-end;
     }
+    .bubble-time { font-size: 11px; color: var(--muted); margin-top: 5px; }
+    .bubble-me .bubble-time { color: rgba(255,255,255,0.55); text-align: right; }
 
-    .bubble-time {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-    .bubble-me .bubble-time { color: rgba(255,255,255,0.6); text-align: right; }
-
-    .chat-input-area {
-      padding: 16px 24px;
+    .chat-input-bar {
+      padding: 10px 14px;
+      padding-bottom: calc(var(--safe-bottom) + 10px);
       border-top: 1px solid var(--border);
-      background: var(--bg)cc;
-      backdrop-filter: blur(12px);
-      max-width: 700px;
-      width: 100%;
-      margin: 0 auto;
+      background: var(--bg)ee;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      display: flex; gap: 10px; align-items: flex-end; flex-shrink: 0;
     }
-
-    .chat-input-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    .chat-input-row textarea {
-      border-radius: 16px;
-      padding: 12px 16px;
-      max-height: 120px;
-      overflow-y: auto;
-    }
+    .chat-input-bar textarea { border-radius: 20px; padding: 12px 16px; max-height: 100px; }
 
     .send-btn {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border: none;
-      border-radius: 14px;
-      color: white;
-      width: 46px;
-      height: 46px;
-      min-width: 46px;
-      cursor: pointer;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      box-shadow: 0 4px 16px var(--glow);
+      border: none; border-radius: 50%; color: white;
+      width: 44px; height: 44px; min-width: 44px;
+      cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px var(--glow); transition: transform 0.1s;
     }
-    .send-btn:hover { transform: scale(1.05); }
-    .send-btn:active { transform: scale(0.97); }
+    .send-btn:active { transform: scale(0.92); }
 
-    /* ═══════════════════════════════════════
-       PAGE 5 — PUBLIC PROFILE (lien partagé)
-    ═══════════════════════════════════════ */
-    #page-public {
-      align-items: center;
-      justify-content: flex-start;
-      padding: 40px 20px;
-    }
-
-    .public-box {
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-    }
+    /* ── PUBLIC ── */
+    #page-public .scroll-area { padding: 28px 22px; padding-bottom: calc(var(--safe-bottom) + 28px); }
 
     .profile-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
+      width: 76px; height: 76px; border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Syne', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      color: white;
-      margin: 0 auto 16px;
-      box-shadow: 0 8px 32px var(--glow);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800;
+      color: white; margin: 0 auto 14px;
+      box-shadow: 0 8px 28px var(--glow);
       animation: pulse 2s ease-in-out infinite;
     }
-
     @keyframes pulse {
-      0%, 100% { box-shadow: 0 8px 32px var(--glow); }
-      50% { box-shadow: 0 8px 48px #7c5cfc60; }
+      0%,100% { box-shadow: 0 8px 28px var(--glow); }
+      50% { box-shadow: 0 8px 44px #7c5cfc60; }
     }
 
-    .public-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 26px;
-      font-weight: 800;
-      text-align: center;
-      margin-bottom: 6px;
-    }
-
-    .public-desc {
-      text-align: center;
-      color: var(--muted);
-      font-size: 15px;
-      margin-bottom: 32px;
-      line-height: 1.5;
-    }
-
-    .anon-form { display: flex; flex-direction: column; gap: 14px; }
+    .public-name { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 6px; }
+    .public-desc { text-align: center; color: var(--muted); font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
 
     .anon-hint {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 13px;
-      color: var(--muted);
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 14px; font-size: 13px; color: var(--muted); margin-bottom: 14px;
     }
 
-    .success-msg {
-      display: none;
-      text-align: center;
-      padding: 32px 20px;
-      animation: fadeUp 0.5s ease both;
-    }
+    .anon-form { display: flex; flex-direction: column; gap: 12px; }
+    .anon-form textarea { min-height: 120px; }
+
+    .success-msg { display: none; text-align: center; padding: 28px 16px; }
     .success-icon { font-size: 52px; margin-bottom: 12px; }
     .success-msg h3 { font-family: 'Syne', sans-serif; font-size: 22px; margin-bottom: 8px; }
-    .success-msg p { color: var(--muted); font-size: 14px; }
+    .success-msg p { color: var(--muted); font-size: 14px; line-height: 1.5; }
 
-    /* ─── TOAST ─── */
+    /* ── TOAST ── */
     .toast {
       position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 20px;
-      font-size: 14px;
-      color: var(--text);
-      z-index: 9999;
-      transition: transform 0.3s ease;
-      white-space: nowrap;
+      bottom: calc(var(--safe-bottom) + 20px);
+      left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 20px; font-size: 14px;
+      color: var(--text); z-index: 9999;
+      transition: transform 0.3s ease; white-space: nowrap; pointer-events: none;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
     .toast.success { border-color: var(--success)40; color: var(--success); }
 
-    /* ─── ANIMATIONS ─── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(14px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* ─── SCROLLBAR ─── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .fadein { animation: fadeUp 0.35s ease both; }
+    ::-webkit-scrollbar { width: 0; height: 0; }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     PAGE 1 — LANDING
-══════════════════════════════════════ -->
+<!-- LANDING -->
 <div id="page-landing" class="page active">
-  <nav>
-    <div class="logo">Whispr</div>
-    <div class="nav-actions">
-      <button class="btn btn-ghost" onclick="showPage('auth', 'login')">Connexion</button>
-      <button class="btn btn-primary" onclick="showPage('auth', 'register')">Commencer</button>
+  <div class="status-bar">
+    <div class="status-bar-content">
+      <div class="logo">Whispr</div>
+      <button class="btn btn-ghost" onclick="showPage('auth','login')">Connexion</button>
     </div>
-  </nav>
-
-  <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 60px 20px;">
-    <div class="hero-badge">
-      <span>✦</span> 100% anonyme & gratuit
-    </div>
-    <h1 class="hero-title">
-      Reçois des<br/><span>messages anonymes</span>
-    </h1>
-    <p class="hero-sub">
-      Partage ton lien, laisse les autres t'écrire anonymement, et réponds en chat privé.
-    </p>
+  </div>
+  <div class="scroll-area">
+    <div class="hero-badge">✦ 100% anonyme & gratuit</div>
+    <h1 class="hero-title">Reçois des<br/><span>messages<br/>anonymes</span></h1>
+    <p class="hero-sub">Partage ton lien, laisse les autres t'écrire anonymement, et réponds en chat privé.</p>
     <div class="hero-cta">
-      <button class="btn btn-primary" onclick="showPage('auth', 'register')">Créer mon lien ✦</button>
-      <button class="btn btn-ghost" onclick="showPublicDemo()">Voir une démo</button>
+      <button class="btn btn-primary btn-full" onclick="showPage('auth','register')">Créer mon lien ✦</button>
+      <button class="btn btn-ghost btn-full" onclick="showPublicDemo()">Voir une démo</button>
     </div>
-
     <div class="features">
-      <div class="feature-pill"><div class="dot"></div> Totalement anonyme</div>
-      <div class="feature-pill"><div class="dot" style="background:var(--accent2)"></div> Réponse en chat</div>
-      <div class="feature-pill"><div class="dot" style="background:var(--success)"></div> Lien partageable</div>
-      <div class="feature-pill"><div class="dot" style="background:#fcd34d"></div> 100% gratuit</div>
+      <div class="feature-pill"><div class="dot"></div>Totalement anonyme</div>
+      <div class="feature-pill"><div class="dot" style="background:var(--accent2)"></div>Chat en direct</div>
+      <div class="feature-pill"><div class="dot" style="background:var(--success)"></div>Lien partageable</div>
+      <div class="feature-pill"><div class="dot" style="background:#fcd34d"></div>100% gratuit</div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PAGE 2 — AUTH
-══════════════════════════════════════ -->
+<!-- AUTH -->
 <div id="page-auth" class="page">
-  <nav>
-    <div class="logo">Whispr</div>
-    <button class="btn btn-ghost" onclick="showPage('landing')">← Retour</button>
-  </nav>
-
-  <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px 20px;">
-    <div class="auth-box">
-      <h2 class="auth-title" id="auth-title">Créer un compte</h2>
-      <p class="auth-sub" id="auth-sub">Rejoins Whispr et génère ton lien anonyme</p>
-
-      <div class="form-group" id="field-name" style="display:none">
-        <label class="form-label">Nom d'utilisateur</label>
-        <input type="text" id="input-username" placeholder="ex: alex_whispr" maxlength="20"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" id="input-email" placeholder="ton@email.com"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Mot de passe</label>
-        <input type="password" id="input-password" placeholder="••••••••"/>
-      </div>
-
-      <button class="btn btn-primary" style="width:100%; margin-top:8px; font-size:16px; padding:14px;" onclick="handleAuth()">
-        <span id="auth-btn-text">Créer mon compte</span>
-      </button>
-
-      <div class="auth-divider">ou</div>
-
-      <div class="auth-switch" id="auth-switch">
-        Déjà un compte ? <a onclick="toggleAuth()">Se connecter</a>
-      </div>
+  <div class="status-bar">
+    <div class="status-bar-content">
+      <button class="btn btn-ghost" style="padding:8px 12px" onclick="showPage('landing')">← Retour</button>
+      <div class="logo">Whispr</div>
+      <div style="width:80px"></div>
+    </div>
+  </div>
+  <div class="scroll-area">
+    <h2 class="auth-title fadein" id="auth-title">Créer un compte</h2>
+    <p class="auth-sub fadein" id="auth-sub">Rejoins Whispr et génère ton lien anonyme</p>
+    <div class="form-group fadein" id="field-name" style="display:none">
+      <label class="form-label">Nom d'utilisateur</label>
+      <input type="text" id="input-username" placeholder="ex: alex_whispr" maxlength="20" autocorrect="off" autocapitalize="none"/>
+    </div>
+    <div class="form-group fadein">
+      <label class="form-label">Email</label>
+      <input type="email" id="input-email" placeholder="ton@email.com" autocomplete="email"/>
+    </div>
+    <div class="form-group fadein">
+      <label class="form-label">Mot de passe</label>
+      <input type="password" id="input-password" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="btn btn-primary btn-full fadein" style="margin-top:6px" onclick="handleAuth()">
+      <span id="auth-btn-text">Créer mon compte</span>
+    </button>
+    <div class="auth-divider">ou</div>
+    <div class="auth-switch" id="auth-switch">
+      Déjà un compte ? <a onclick="toggleAuth()">Se connecter</a>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PAGE 3 — DASHBOARD
-══════════════════════════════════════ -->
+<!-- DASHBOARD -->
 <div id="page-dashboard" class="page">
-  <nav>
-    <div class="logo">Whispr</div>
-    <div class="nav-actions">
-      <span style="font-size:14px; color:var(--muted)" id="nav-username"></span>
-      <button class="btn btn-ghost" onclick="logout()" style="font-size:13px; padding:8px 14px;">Déconnexion</button>
+  <div class="status-bar">
+    <div class="status-bar-content">
+      <div class="logo">Whispr</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:13px;color:var(--muted)" id="nav-username"></span>
+        <button class="btn btn-ghost" style="font-size:13px;padding:8px 12px" onclick="logout()">Sortir</button>
+      </div>
     </div>
-  </nav>
-
-  <div class="dash-content">
-    <div class="link-card">
+  </div>
+  <div class="scroll-area">
+    <div class="link-card fadein">
       <div class="link-label">✦ Ton lien anonyme</div>
       <div class="link-url">
-        <span id="my-link">whispr.app/u/alex_whispr</span>
+        <span id="my-link">whispr.app/u/toi</span>
         <button class="copy-btn" id="copy-btn" onclick="copyLink()">Copier</button>
       </div>
-      <p style="font-size:13px; color:var(--muted); margin-top:12px;">
-        Partage ce lien sur tes réseaux — n'importe qui peut t'écrire anonymement 💜
-      </p>
+      <p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5">Partage ce lien sur tes réseaux 💜</p>
     </div>
-
     <div class="section-title">
       Messages reçus
-      <span class="msg-count" id="msg-count">0 nouveau</span>
+      <span class="msg-count" id="msg-count">0</span>
     </div>
-
     <div class="message-list" id="message-list">
       <div class="empty-state">
         <div class="empty-icon">💌</div>
-        <p>Aucun message pour l'instant.<br/>Partage ton lien pour commencer à en recevoir !</p>
+        <p>Aucun message pour l'instant.<br/>Partage ton lien pour commencer !</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PAGE 4 — CHAT
-══════════════════════════════════════ -->
+<!-- CHAT -->
 <div id="page-chat" class="page">
-  <div class="chat-header">
+  <div class="chat-topbar">
     <button class="back-btn" onclick="showPage('dashboard')">←</button>
     <div class="chat-info">
       <h3>Anonyme 👻</h3>
-      <span id="chat-time">Message reçu il y a quelques instants</span>
+      <span id="chat-time">Message reçu récemment</span>
     </div>
-    <button class="btn-danger btn" onclick="deleteMessage()">Supprimer</button>
+    <button class="del-btn" onclick="deleteMessage()">Suppr.</button>
   </div>
-
-  <div class="chat-messages" id="chat-messages"></div>
-
-  <div style="padding: 0 24px 24px; max-width:700px; width:100%; margin:0 auto;">
-    <div class="chat-input-row">
-      <textarea id="reply-input" rows="1" placeholder="Répondre (visible uniquement par toi et l'anonyme)..." oninput="autoResize(this)"></textarea>
-      <button class="send-btn" onclick="sendReply()">➤</button>
-    </div>
+  <div class="scroll-area" id="chat-messages"></div>
+  <div class="chat-input-bar">
+    <textarea id="reply-input" rows="1" placeholder="Répondre..." oninput="autoResize(this)"></textarea>
+    <button class="send-btn" onclick="sendReply()">➤</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PAGE 5 — PROFIL PUBLIC
-══════════════════════════════════════ -->
+<!-- PUBLIC -->
 <div id="page-public" class="page">
-  <nav>
-    <div class="logo">Whispr</div>
-    <button class="btn btn-primary" style="font-size:14px;" onclick="showPage('auth', 'register')">Créer le mien</button>
-  </nav>
-
-  <div style="flex:1; display:flex; justify-content:center; padding:40px 20px;">
-    <div class="public-box">
-      <div class="profile-avatar" id="public-avatar">A</div>
-      <div class="public-name" id="public-name">alex_whispr</div>
-      <div class="public-desc">Envoie-moi un message anonyme 👀<br/>Je ne saurai jamais qui tu es.</div>
-
-      <div id="anon-form-wrap">
-        <div class="anon-form">
-          <div class="anon-hint">
-            <span>👻</span>
-            <span>Ton identité restera totalement cachée.</span>
-          </div>
-          <textarea id="anon-message" rows="4" placeholder="Écris ton message ici..."></textarea>
-          <button class="btn btn-primary" style="font-size:16px; padding:14px;" onclick="sendAnonMessage()">
-            Envoyer anonymement 💜
-          </button>
-        </div>
+  <div class="status-bar">
+    <div class="status-bar-content">
+      <div class="logo">Whispr</div>
+      <button class="btn btn-primary" style="font-size:13px;padding:9px 14px" onclick="showPage('auth','register')">Créer le mien</button>
+    </div>
+  </div>
+  <div class="scroll-area">
+    <div class="profile-avatar" id="public-avatar">A</div>
+    <div class="public-name" id="public-name">alex_whispr</div>
+    <div class="public-desc">Envoie-moi un message anonyme 👀<br/>Je ne saurai jamais qui tu es.</div>
+    <div id="anon-form-wrap">
+      <div class="anon-hint"><span>👻</span><span>Ton identité restera totalement cachée.</span></div>
+      <div class="anon-form">
+        <textarea id="anon-message" rows="4" placeholder="Écris ton message ici..."></textarea>
+        <button class="btn btn-primary btn-full" onclick="sendAnonMessage()">Envoyer anonymement 💜</button>
       </div>
-
-      <div class="success-msg" id="success-msg">
-        <div class="success-icon">🚀</div>
-        <h3>Message envoyé !</h3>
-        <p>alex_whispr recevra ton message.<br/>Il ne saura jamais que c'est toi.</p>
-        <button class="btn btn-ghost" style="margin-top:20px;" onclick="resetAnonForm()">Envoyer un autre</button>
-      </div>
+    </div>
+    <div class="success-msg" id="success-msg">
+      <div class="success-icon">🚀</div>
+      <h3>Message envoyé !</h3>
+      <p>Le destinataire recevra ton message.<br/>Il ne saura jamais que c'est toi.</p>
+      <button class="btn btn-ghost" style="margin-top:20px;width:100%" onclick="resetAnonForm()">Envoyer un autre</button>
     </div>
   </div>
 </div>
 
-<!-- ─── TOAST ─── -->
 <div class="toast" id="toast"></div>
 
-<!-- ══════════════════════════════════════
-     FIREBASE CONFIG + JS
-══════════════════════════════════════ -->
 <script type="module">
-  // ─── FIREBASE SETUP ───────────────────────────────────────
-  // 👇 Remplace ces valeurs par celles de ta Firebase Console
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    getDocs,
-    doc,
-    setDoc,
-    getDoc,
-    query,
-    orderBy,
-    onSnapshot,
-    serverTimestamp,
-    updateDoc,
-    deleteDoc
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA6h9QC2n2yqJT0OKbBnCDRDu3Ce6xdGv0",
-  authDomain: "anonyme-8c9c2.firebaseapp.com",
-  projectId: "anonyme-8c9c2",
-  storageBucket: "anonyme-8c9c2.firebasestorage.app",
-  messagingSenderId: "659504534736",
-  appId: "1:659504534736:web:3236c94af390b68d5ebad5"
-};
+  // 👇 Remplace par ta config Firebase
+  const firebaseConfig = {
+    apiKey: "VOTRE_API_KEY",
+    authDomain: "VOTRE_PROJET.firebaseapp.com",
+    projectId: "VOTRE_PROJET_ID",
+    storageBucket: "VOTRE_PROJET.appspot.com",
+    messagingSenderId: "VOTRE_SENDER_ID",
+    appId: "VOTRE_APP_ID"
+  };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // ─── STATE ────────────────────────────────────────────────
-  let currentUser = null;
-  let currentUsername = null;
-  let currentMessageId = null;
-  let currentConversation = [];
+  let currentUser = null, currentUsername = null, currentMessageId = null, currentConversation = [];
 
-  // ─── AUTH STATE ───────────────────────────────────────────
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
@@ -888,175 +571,101 @@ const firebaseConfig = {
     }
   });
 
-  // ─── REGISTER ─────────────────────────────────────────────
   window.handleAuth = async function() {
-    const isRegister = document.getElementById('field-name').style.display !== 'none';
+    const isReg = document.getElementById('field-name').style.display !== 'none';
     const email = document.getElementById('input-email').value.trim();
     const password = document.getElementById('input-password').value;
     const username = document.getElementById('input-username').value.trim().toLowerCase();
-
-    if (!email || !password) return showToast('Remplis tous les champs', false);
-
+    if (!email || !password) return showToast('Remplis tous les champs');
     try {
-      if (isRegister) {
-        if (!username) return showToast('Choisis un nom d\'utilisateur', false);
+      if (isReg) {
+        if (!username) return showToast("Choisis un nom d'utilisateur");
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await setDoc(doc(db, "users", cred.user.uid), {
-          username,
-          email,
-          createdAt: serverTimestamp()
-        });
-        currentUsername = username;
-        window.currentUsername = username;
+        await setDoc(doc(db, "users", cred.user.uid), { username, email, createdAt: serverTimestamp() });
+        currentUsername = username; window.currentUsername = username;
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
     } catch (e) {
-      const msgs = {
-        'auth/email-already-in-use': 'Email déjà utilisé',
-        'auth/weak-password': 'Mot de passe trop court (6 min)',
-        'auth/wrong-password': 'Mot de passe incorrect',
-        'auth/user-not-found': 'Compte introuvable',
-      };
-      showToast(msgs[e.code] || 'Erreur : ' + e.message, false);
+      const msgs = { 'auth/email-already-in-use':'Email déjà utilisé','auth/weak-password':'Mot de passe trop court','auth/wrong-password':'Mot de passe incorrect','auth/user-not-found':'Compte introuvable' };
+      showToast(msgs[e.code] || 'Erreur : ' + e.message);
     }
   };
 
-  window.logout = async function() {
-    await signOut(auth);
-    currentUser = null;
-    currentUsername = null;
-    showPage('landing');
-  };
+  window.logout = async function() { await signOut(auth); currentUser = null; currentUsername = null; showPage('landing'); };
 
-  // ─── LOAD MESSAGES ────────────────────────────────────────
   async function loadMessages() {
     if (!currentUser) return;
-    const q = query(
-      collection(db, "users", currentUser.uid, "messages"),
-      orderBy("createdAt", "desc")
-    );
+    const q = query(collection(db, "users", currentUser.uid, "messages"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snap) => {
       const list = document.getElementById('message-list');
       const unread = snap.docs.filter(d => !d.data().read).length;
-      document.getElementById('msg-count').textContent =
-        unread > 0 ? `${unread} nouveau${unread > 1 ? 'x' : ''}` : `${snap.size} total`;
-
-      if (snap.empty) {
-        list.innerHTML = `<div class="empty-state">
-          <div class="empty-icon">💌</div>
-          <p>Aucun message pour l'instant.<br/>Partage ton lien pour commencer !</p>
-        </div>`;
-        return;
-      }
-
+      document.getElementById('msg-count').textContent = unread > 0 ? `${unread} nouveau${unread > 1 ? 'x' : ''}` : `${snap.size}`;
+      if (snap.empty) { list.innerHTML = `<div class="empty-state"><div class="empty-icon">💌</div><p>Aucun message.<br/>Partage ton lien !</p></div>`; return; }
       list.innerHTML = '';
       snap.docs.forEach((d, i) => {
         const data = d.data();
         const el = document.createElement('div');
-        el.className = `message-item ${!data.read ? 'unread' : ''}`;
+        el.className = `message-item fadein ${!data.read ? 'unread' : ''}`;
         el.style.animationDelay = `${i * 0.05}s`;
         const ts = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
-        el.innerHTML = `
-          <div class="msg-preview">${escapeHtml(data.content)}</div>
-          <div class="msg-meta">
-            <span>${timeAgo(ts)}</span>
-            <span class="msg-tag ${data.replied ? 'replied' : ''}">
-              ${data.replied ? '✓ Répondu' : 'Sans réponse'}
-            </span>
-          </div>`;
+        el.innerHTML = `<div class="msg-preview">${escapeHtml(data.content)}</div><div class="msg-meta"><span>${timeAgo(ts)}</span><span class="msg-tag ${data.replied ? 'replied' : ''}">${data.replied ? '✓ Répondu' : 'Sans réponse'}</span></div>`;
         el.onclick = () => openChat(d.id, data);
         list.appendChild(el);
       });
     });
   }
 
-  // ─── OPEN CHAT ────────────────────────────────────────────
   window.openChat = async function(msgId, data) {
     currentMessageId = msgId;
     currentConversation = data.conversation || [{ role: 'anon', text: data.content, ts: data.createdAt }];
-
-    // Mark as read
     await updateDoc(doc(db, "users", currentUser.uid, "messages", msgId), { read: true });
-
     const ts = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
     document.getElementById('chat-time').textContent = 'Reçu ' + timeAgo(ts);
-
-    renderChat();
-    showPage('chat');
+    renderChat(); showPage('chat');
   };
 
   function renderChat() {
     const container = document.getElementById('chat-messages');
     container.innerHTML = '';
     currentConversation.forEach((msg, i) => {
-      const div = document.createElement('div');
-      div.style.animationDelay = `${i * 0.06}s`;
-      div.innerHTML = `
-        <div class="chat-bubble ${msg.role === 'anon' ? 'bubble-anon' : 'bubble-me'}">
-          ${escapeHtml(msg.text)}
-          <div class="bubble-time">${msg.ts?.toDate ? timeAgo(msg.ts.toDate()) : 'maintenant'}</div>
-        </div>`;
-      container.appendChild(div);
+      const wrap = document.createElement('div');
+      wrap.style.display = 'flex'; wrap.style.animationDelay = `${i * 0.06}s`; wrap.className = 'fadein';
+      wrap.innerHTML = `<div class="chat-bubble ${msg.role === 'anon' ? 'bubble-anon' : 'bubble-me'}">${escapeHtml(msg.text)}<div class="bubble-time">${msg.ts?.toDate ? timeAgo(msg.ts.toDate()) : 'maintenant'}</div></div>`;
+      container.appendChild(wrap);
     });
-    container.scrollTop = container.scrollHeight;
+    setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
   }
 
   window.sendReply = async function() {
     const input = document.getElementById('reply-input');
     const text = input.value.trim();
     if (!text || !currentMessageId) return;
-
-    const newMsg = { role: 'me', text, ts: new Date() };
-    currentConversation.push(newMsg);
-
-    input.value = '';
-    input.style.height = 'auto';
-
+    currentConversation.push({ role: 'me', text, ts: new Date() });
+    input.value = ''; input.style.height = 'auto';
     renderChat();
-
-    await updateDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId), {
-      conversation: currentConversation,
-      replied: true
-    });
+    await updateDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId), { conversation: currentConversation, replied: true });
   };
 
   window.deleteMessage = async function() {
     if (!currentMessageId) return;
     await deleteDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId));
-    showToast('Message supprimé', true);
-    showPage('dashboard');
+    showToast('Supprimé ✓', true); showPage('dashboard');
   };
 
-  // ─── SEND ANON MESSAGE ────────────────────────────────────
   window.sendAnonMessage = async function() {
     const text = document.getElementById('anon-message').value.trim();
     const targetUser = document.getElementById('public-name').textContent;
-    if (!text) return showToast('Écris un message d\'abord !', false);
-
+    if (!text) return showToast("Écris un message d'abord !");
     try {
-      // Find user by username
       const usersSnap = await getDocs(collection(db, "users"));
       let targetUid = null;
-      usersSnap.forEach(d => {
-        if (d.data().username === targetUser) targetUid = d.id;
-      });
-
-      if (!targetUid) return showToast('Utilisateur introuvable', false);
-
-      await addDoc(collection(db, "users", targetUid, "messages"), {
-        content: text,
-        conversation: [{ role: 'anon', text, ts: new Date() }],
-        read: false,
-        replied: false,
-        createdAt: serverTimestamp()
-      });
-
+      usersSnap.forEach(d => { if (d.data().username === targetUser) targetUid = d.id; });
+      if (!targetUid) return showToast('Utilisateur introuvable');
+      await addDoc(collection(db, "users", targetUid, "messages"), { content: text, conversation: [{ role: 'anon', text, ts: new Date() }], read: false, replied: false, createdAt: serverTimestamp() });
       document.getElementById('anon-form-wrap').style.display = 'none';
       document.getElementById('success-msg').style.display = 'block';
-    } catch (e) {
-      showToast('Erreur : ' + e.message, false);
-    }
+    } catch (e) { showToast('Erreur : ' + e.message); }
   };
 
   window.resetAnonForm = function() {
@@ -1065,51 +674,40 @@ const firebaseConfig = {
     document.getElementById('success-msg').style.display = 'none';
   };
 
-  // ─── COPY LINK ────────────────────────────────────────────
   window.copyLink = function() {
     const link = document.getElementById('my-link').textContent;
     navigator.clipboard.writeText(link).then(() => {
       const btn = document.getElementById('copy-btn');
-      btn.textContent = '✓ Copié !';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copier';
-        btn.classList.remove('copied');
-      }, 2000);
+      btn.textContent = '✓ Copié'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2000);
     });
   };
 
-  // ─── HELPERS ──────────────────────────────────────────────
-  function escapeHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  }
-
+  function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
   function timeAgo(date) {
     const diff = (Date.now() - date.getTime()) / 1000;
-    if (diff < 60) return 'à l\'instant';
+    if (diff < 60) return "à l'instant";
     if (diff < 3600) return `il y a ${Math.floor(diff/60)} min`;
     if (diff < 86400) return `il y a ${Math.floor(diff/3600)}h`;
     return `il y a ${Math.floor(diff/86400)}j`;
   }
-
-  function showToast(msg, ok = true) {
+  function showToast(msg, ok = false) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = `toast show ${ok ? 'success' : ''}`;
+    t.textContent = msg; t.className = `toast show ${ok ? 'success' : ''}`;
     setTimeout(() => t.className = 'toast', 2800);
   }
   window.showToast = showToast;
 </script>
 
 <script>
-  // ─── NAVIGATION ───────────────────────────────────────────
   let authMode = 'register';
 
   function showPage(name, mode) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     if (name === 'auth' && mode) setupAuth(mode);
-    window.scrollTo(0, 0);
+    const area = document.querySelector('#page-' + name + ' .scroll-area');
+    if (area) area.scrollTop = 0;
   }
   window.showPage = showPage;
 
@@ -1117,9 +715,7 @@ const firebaseConfig = {
     authMode = mode;
     const isReg = mode === 'register';
     document.getElementById('auth-title').textContent = isReg ? 'Créer un compte' : 'Connexion';
-    document.getElementById('auth-sub').textContent = isReg
-      ? 'Rejoins Whispr et génère ton lien anonyme'
-      : 'Bon retour sur Whispr 👋';
+    document.getElementById('auth-sub').textContent = isReg ? 'Rejoins Whispr et génère ton lien anonyme' : 'Bon retour sur Whispr 👋';
     document.getElementById('field-name').style.display = isReg ? 'block' : 'none';
     document.getElementById('auth-btn-text').textContent = isReg ? 'Créer mon compte' : 'Se connecter';
     document.getElementById('auth-switch').innerHTML = isReg
@@ -1127,9 +723,7 @@ const firebaseConfig = {
       : 'Pas encore de compte ? <a onclick="toggleAuth()">Créer un compte</a>';
   }
 
-  function toggleAuth() {
-    setupAuth(authMode === 'register' ? 'login' : 'register');
-  }
+  function toggleAuth() { setupAuth(authMode === 'register' ? 'login' : 'register'); }
   window.toggleAuth = toggleAuth;
 
   function showPublicDemo() {
@@ -1139,20 +733,13 @@ const firebaseConfig = {
   }
   window.showPublicDemo = showPublicDemo;
 
-  function autoResize(el) {
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-  }
+  function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 100) + 'px'; }
   window.autoResize = autoResize;
 
-  // Enter to send in chat
   document.addEventListener('keydown', (e) => {
     const replyInput = document.getElementById('reply-input');
-    if (document.getElementById('page-chat').classList.contains('active')
-        && e.key === 'Enter' && !e.shiftKey
-        && document.activeElement === replyInput) {
-      e.preventDefault();
-      window.sendReply && window.sendReply();
+    if (document.getElementById('page-chat').classList.contains('active') && e.key === 'Enter' && !e.shiftKey && document.activeElement === replyInput) {
+      e.preventDefault(); window.sendReply && window.sendReply();
     }
   });
 </script>
