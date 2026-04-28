@@ -1067,7 +1067,8 @@
 
   const APP_URL = "https://whispr-chi-three.vercel.app";
 
- const firebaseConfig = {
+  // Your web app's Firebase configuration
+const firebaseConfig = {
   apiKey: "AIzaSyA6h9QC2n2yqJT0OKbBnCDRDu3Ce6xdGv0",
   authDomain: "anonyme-8c9c2.firebaseapp.com",
   projectId: "anonyme-8c9c2",
@@ -1449,17 +1450,64 @@
   };
 
   window.shareWhatsApp = function() {
-    const link = `${APP_URL}?u=${window.currentUsername||''}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent('Envoie-moi un message anonyme 👻 '+link)}`);
+    const username = window.currentUsername || '';
+    if (!username) return showToast("Connecte-toi d'abord !");
+    const link = `${APP_URL}?u=${username}`;
+    const text = encodeURIComponent('Envoie-moi un message anonyme 👻\n' + link);
+    // Utiliser location.href pour éviter le blocage des popups sur mobile
+    const a = document.createElement('a');
+    a.href = `https://wa.me/?text=${text}`;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
+
   window.shareTelegram = function() {
-    const link = `${APP_URL}?u=${window.currentUsername||''}`;
-    window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Envoie-moi un message anonyme 👻')}`);
+    const username = window.currentUsername || '';
+    if (!username) return showToast("Connecte-toi d'abord !");
+    const link = `${APP_URL}?u=${username}`;
+    const a = document.createElement('a');
+    a.href = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Envoie-moi un message anonyme 👻')}`;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
+
   window.shareNative = function() {
-    const link = `${APP_URL}?u=${window.currentUsername||''}`;
-    if (navigator.share) navigator.share({title:'NGA', text:'Envoie-moi un message anonyme 👻', url:link});
-    else copyLink();
+    const username = window.currentUsername || '';
+    if (!username) return showToast("Connecte-toi d'abord !");
+    const link = `${APP_URL}?u=${username}`;
+    if (navigator.share) {
+      navigator.share({ title: 'NGA', text: 'Envoie-moi un message anonyme 👻', url: link })
+        .catch(() => {}); // ignorer si l'utilisateur annule
+    } else {
+      copyLink();
+    }
+  };
+
+  window.copyLink = function() {
+    const username = window.currentUsername || '';
+    if (!username) return showToast("Connecte-toi d'abord !");
+    const link = `${APP_URL}?u=${username}`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(link).then(() => {
+        const btn = document.getElementById('copy-link-btn');
+        if (btn) { btn.textContent = '✓ Copié !'; btn.classList.add('copied'); setTimeout(()=>{btn.innerHTML='🔗 copier le lien';btn.classList.remove('copied');},2000); }
+        showToast('Lien copié 💜', true);
+      });
+    } else {
+      // Fallback pour les navigateurs sans clipboard API
+      const el = document.createElement('textarea');
+      el.value = link; el.style.position = 'fixed'; el.style.opacity = '0';
+      document.body.appendChild(el); el.focus(); el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showToast('Lien copié 💜', true);
+    }
   };
 
   window.downloadApp = function() {
