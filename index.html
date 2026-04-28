@@ -6,9 +6,13 @@
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <title>NGA</title>
+  <title>Whispr</title>
+  <!-- ── PWA ── -->
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="theme-color" content="#7c5cfc"/>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/0jJ5yVSL/1777374660574.png"/>
   <link rel="apple-touch-icon" href="https://i.postimg.cc/0jJ5yVSL/1777374660574.png"/>
+  <meta name="apple-mobile-web-app-title" content="Whispr"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -911,11 +915,91 @@
     </div>
     <button class="del-btn" onclick="deleteMessage()">Suppr.</button>
   </div>
+
+  <!-- Barre indices premium -->
+  <div id="hints-bar" style="
+    display:none; align-items:center; gap:10px;
+    padding:10px 16px; background:#1a1a26;
+    border-bottom:1px solid #ffffff12; flex-shrink:0;
+    position:relative; cursor:pointer;
+  " onclick="onHintsClick()">
+    <span style="font-size:12px;color:#7777aa;font-weight:600;letter-spacing:1px;text-transform:uppercase">🔍 Indices</span>
+    <div style="display:flex;gap:8px;flex:1;flex-wrap:wrap">
+      <span style="background:#12121a;border:1px solid #ffffff12;border-radius:100px;padding:4px 12px;font-size:12px">
+        📱 <span id="hint-device">?</span>
+      </span>
+      <span style="background:#12121a;border:1px solid #ffffff12;border-radius:100px;padding:4px 12px;font-size:12px">
+        📍 <span id="hint-city">?</span>
+      </span>
+      <span style="background:#12121a;border:1px solid #ffffff12;border-radius:100px;padding:4px 12px;font-size:12px">
+        🌍 <span id="hint-country">?</span>
+      </span>
+    </div>
+    <div id="hints-lock-overlay" style="
+      display:none; position:absolute; inset:0;
+      background:#0a0a0fcc; backdrop-filter:blur(3px);
+      align-items:center; justify-content:center; gap:8px;
+      font-size:13px; color:#c084fc; font-weight:600;
+      border-radius:0;
+    ">🔒 Premium pour voir les indices</div>
+  </div>
+
   <div class="scroll-area" id="chat-messages"></div>
   <div class="chat-input-bar">
     <textarea id="reply-input" rows="1" placeholder="Répondre..." oninput="autoResize(this)"></textarea>
     <button class="send-btn" onclick="sendReply()">➤</button>
   </div>
+</div>
+
+<!-- ══ MODAL PAYWALL CONNEXION ══ -->
+<div id="paywall-modal" style="
+  display:none; position:fixed; inset:0; z-index:9990;
+  background:#000000dd; backdrop-filter:blur(10px);
+  align-items:flex-end; justify-content:center;
+">
+<div style="
+  background:#12121a; border:1px solid #ffffff15;
+  border-radius:28px 28px 0 0;
+  padding:28px 24px calc(env(safe-area-inset-bottom,0px) + 32px);
+  width:100%; max-width:480px;
+  animation:slideUp 0.35s ease both;
+">
+  <div style="width:40px;height:4px;background:#ffffff20;border-radius:4px;margin:0 auto 24px"></div>
+  <div style="font-size:44px;text-align:center;margin-bottom:16px">🔐</div>
+  <h3 style="font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;text-align:center;margin-bottom:10px">
+    Tu as atteint la limite !
+  </h3>
+  <p style="color:#7777aa;font-size:15px;text-align:center;line-height:1.6;margin-bottom:28px">
+    Tu as envoyé <strong style="color:white">3 messages anonymes</strong>.<br/>
+    Connecte-toi gratuitement pour continuer et garder l'historique de tes conversations.
+  </p>
+
+  <!-- Connexion Google -->
+  <button onclick="signInWithGoogle()" style="
+    width:100%; padding:16px; border-radius:16px; border:none;
+    background:white; color:#111;
+    font-family:'Nunito',sans-serif; font-size:16px; font-weight:800;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
+    margin-bottom:12px; transition:transform 0.1s;
+  ">
+    <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+    Continuer avec Google
+  </button>
+
+  <!-- Email/Password -->
+  <button onclick="closePaywallModal(); showPage('auth');" style="
+    width:100%; padding:14px; border-radius:16px;
+    border:1px solid #ffffff15; background:transparent;
+    color:white; font-family:'Nunito',sans-serif;
+    font-size:15px; font-weight:700; cursor:pointer; margin-bottom:10px;
+  ">📧 Continuer avec email</button>
+
+  <button onclick="closePaywallModal()" style="
+    width:100%; padding:12px; border-radius:16px; border:none;
+    background:transparent; color:#7777aa;
+    font-family:'Inter',sans-serif; font-size:14px; cursor:pointer;
+  ">Annuler</button>
+</div>
 </div>
 
 <!-- ══ PUBLIC (lien anonyme) ══ -->
@@ -977,12 +1061,12 @@
 <!-- ══ FIREBASE ══ -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   const APP_URL = "https://whispr-chi-three.vercel.app";
 
-  const firebaseConfig = {
+ const firebaseConfig = {
   apiKey: "AIzaSyA6h9QC2n2yqJT0OKbBnCDRDu3Ce6xdGv0",
   authDomain: "anonyme-8c9c2.firebaseapp.com",
   projectId: "anonyme-8c9c2",
@@ -990,6 +1074,7 @@
   messagingSenderId: "659504534736",
   appId: "1:659504534736:web:3236c94af390b68d5ebad5"
 };
+
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
@@ -1099,6 +1184,28 @@
     await updateDoc(doc(db,"users",currentUser.uid,"messages",msgId), {read:true});
     const ts = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
     document.getElementById('chat-time').textContent = 'Reçu '+timeAgo(ts);
+
+    // ── Afficher les hints si premium ──
+    const userSnap = await getDoc(doc(db,"users",currentUser.uid));
+    const isPremium = userSnap.exists() && userSnap.data().isPremium === true;
+    const hintsBar = document.getElementById('hints-bar');
+    if (hintsBar) {
+      if (isPremium && data.hints) {
+        hintsBar.style.display = 'flex';
+        document.getElementById('hint-device').textContent = data.hints.device || '?';
+        document.getElementById('hint-city').textContent = data.hints.city || '?';
+        document.getElementById('hint-country').textContent = data.hints.country || '?';
+      } else if (!isPremium && data.hints) {
+        hintsBar.style.display = 'flex';
+        document.getElementById('hint-device').textContent = '???';
+        document.getElementById('hint-city').textContent = '???';
+        document.getElementById('hint-country').textContent = '???';
+        hintsBar.setAttribute('data-locked', 'true');
+      } else {
+        hintsBar.style.display = 'none';
+      }
+    }
+
     renderOwnerChat(); showPage('chat');
   };
 
@@ -1130,22 +1237,47 @@
     showToast('Supprimé ✓', true); showPage('main');
   };
 
-  // ── ENVOYER MESSAGE ANONYME ──
+  // ── ENVOYER MESSAGE ANONYME (avec paywall + hints) ──
   window.sendAnonMessage = async function() {
     const text = document.getElementById('anon-message').value.trim();
     const targetUser = document.getElementById('public-avatar').getAttribute('data-username');
     if (!text) return showToast("Écris un message d'abord !");
+
+    // ── PAYWALL : 3 messages anonymes max ──
+    const anonCount = parseInt(localStorage.getItem('nga_anon_count') || '0');
+    if (anonCount >= 3 && !auth.currentUser) {
+      // Sauvegarder le message pour après connexion
+      window._pendingAnonMsg = { text, targetUser };
+      showPaywallModal();
+      return;
+    }
+
+    await _doSendAnon(text, targetUser);
+  };
+
+  async function _doSendAnon(text, targetUser) {
     try {
       const usersSnap = await getDocs(collection(db,"users"));
       let targetUid = null;
       usersSnap.forEach(d => { if (d.data().username === targetUser) targetUid = d.id; });
       if (!targetUid) return showToast('Utilisateur introuvable');
 
+      // ── CAPTURE HINTS (device + localisation) ──
+      const hints = await captureHints();
+
       const token = generateToken();
       const msgRef = await addDoc(collection(db,"users",targetUid,"messages"), {
-        content:text, conversation:[{role:'anon', text, ts:new Date()}],
-        read:false, replied:false, token, exchangeCount:1, createdAt:serverTimestamp()
+        content: text,
+        conversation: [{role:'anon', text, ts:new Date()}],
+        read: false, replied: false, token,
+        exchangeCount: 1,
+        createdAt: serverTimestamp(),
+        hints: hints  // Stocké mais visible uniquement aux comptes premium
       });
+
+      // Incrémenter le compteur anonyme
+      const count = parseInt(localStorage.getItem('nga_anon_count') || '0');
+      localStorage.setItem('nga_anon_count', count + 1);
 
       const threadLink = `${APP_URL}?thread=${token}&uid=${targetUid}&mid=${msgRef.id}`;
       window.currentThreadLink = threadLink;
@@ -1157,6 +1289,74 @@
       document.getElementById('anon-form-wrap').style.display = 'none';
       document.getElementById('sent-success').style.display = 'block';
     } catch(e) { showToast('Erreur: '+e.message); }
+  }
+
+  // ── CAPTURE HINTS ──
+  async function captureHints() {
+    const ua = navigator.userAgent;
+    let device = 'Inconnu';
+    if (/iPhone/.test(ua)) device = 'iPhone';
+    else if (/iPad/.test(ua)) device = 'iPad';
+    else if (/Android/.test(ua)) {
+      const m = ua.match(/Android [^;]+;\s*([^)]+)\)/);
+      device = m ? m[1].trim() : 'Android';
+    } else if (/Windows/.test(ua)) device = 'Windows PC';
+    else if (/Mac/.test(ua)) device = 'Mac';
+
+    let location = { city: 'Inconnu', country: 'Inconnu', ip: '' };
+    try {
+      const res = await fetch('https://ip-api.com/json/?fields=city,country,query', { signal: AbortSignal.timeout(3000) });
+      if (res.ok) {
+        const data = await res.json();
+        location = { city: data.city || 'Inconnu', country: data.country || 'Inconnu', ip: data.query || '' };
+      }
+    } catch(_) {}
+
+    return { device, city: location.city, country: location.country, capturedAt: new Date().toISOString() };
+  }
+
+  // ── PAYWALL MODAL ──
+  function showPaywallModal() {
+    document.getElementById('paywall-modal').classList.add('show');
+  }
+  window.closePaywallModal = function() {
+    document.getElementById('paywall-modal').classList.remove('show');
+  };
+
+  // Connexion Google depuis le paywall
+  window.signInWithGoogle = async function() {
+    try {
+      const provider = new GoogleAuthProvider();
+      const cred = await signInWithPopup(auth, provider);
+      const user = cred.user;
+
+      // Créer le profil si nouveau
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (!snap.exists()) {
+        const username = user.displayName
+          ? user.displayName.toLowerCase().replace(/\s+/g,'_').substring(0,20)
+          : 'user_' + user.uid.substring(0,6);
+        await setDoc(doc(db,"users", user.uid), {
+          username, email: user.email,
+          displayName: user.displayName || '',
+          photoURL: user.photoURL || '',
+          createdAt: serverTimestamp()
+        });
+      }
+
+      // Fermer le modal
+      closePaywallModal();
+      // Réinitialiser le compteur après connexion
+      localStorage.removeItem('nga_anon_count');
+      // Envoyer le message en attente
+      if (window._pendingAnonMsg) {
+        const { text, targetUser } = window._pendingAnonMsg;
+        window._pendingAnonMsg = null;
+        await _doSendAnon(text, targetUser);
+      }
+    } catch(e) {
+      if (e.code !== 'auth/popup-closed-by-user') showToast('Erreur connexion Google');
+    }
   };
 
   window.copyThreadLink = function() {
@@ -1381,6 +1581,30 @@
   function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
   window.autoResize = autoResize;
 
+  // ── Hints lock click ──
+  window.onHintsClick = function() {
+    const bar = document.getElementById('hints-bar');
+    if (bar.getAttribute('data-locked') === 'true') {
+      showToast('🔒 Passe Premium pour voir les indices !');
+    }
+  };
+
+  // ── Afficher compteur messages anonymes ──
+  (function updateAnonCounter() {
+    const count = parseInt(localStorage.getItem('nga_anon_count') || '0');
+    const remaining = Math.max(0, 3 - count);
+    const wrap = document.getElementById('anon-form-wrap');
+    if (wrap && !document.getElementById('anon-counter-el')) {
+      const counter = document.createElement('div');
+      counter.id = 'anon-counter-el';
+      counter.className = 'anon-counter';
+      counter.innerHTML = remaining > 0
+        ? `<span>${remaining} message${remaining > 1 ? 's' : ''} anonyme${remaining > 1 ? 's' : ''}</span> gratuit${remaining > 1 ? 's' : ''} restant`
+        : '⚠️ Limite atteinte — connecte-toi pour continuer';
+      wrap.insertBefore(counter, wrap.firstChild);
+    }
+  })();
+
   // Envoyer avec Entrée
   document.addEventListener('keydown', (e) => {
     const ri = document.getElementById('reply-input');
@@ -1388,6 +1612,215 @@
       e.preventDefault(); window.sendReply&&window.sendReply();
     }
   });
+</script>
+
+<!-- ══════════════════════════════════════
+     GUIDE INSTALLATION iOS
+══════════════════════════════════════ -->
+<div id="ios-guide" style="
+  display:none; position:fixed; inset:0; z-index:9998;
+  background:#000000cc; backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  align-items:flex-end; justify-content:center;
+">
+  <div style="
+    background:#12121a; border:1px solid #ffffff15;
+    border-radius:24px 24px 0 0;
+    padding:28px 24px calc(env(safe-area-inset-bottom,0px) + 28px);
+    width:100%; max-width:480px;
+    animation: slideUp 0.35s ease both;
+  ">
+    <div style="width:40px;height:4px;background:#ffffff20;border-radius:4px;margin:0 auto 24px;"></div>
+    <h3 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px">
+      📲 Installer Whispr sur iPhone
+    </h3>
+    <p style="color:#7777aa;font-size:14px;margin-bottom:24px;line-height:1.5">
+      Suis ces 3 étapes dans Safari pour ajouter Whispr sur ton écran d'accueil.
+    </p>
+
+    <!-- Étape 1 -->
+    <div style="display:flex;gap:14px;margin-bottom:18px;align-items:flex-start">
+      <div style="
+        width:36px;height:36px;border-radius:50%;
+        background:linear-gradient(135deg,#7c5cfc,#c084fc);
+        display:flex;align-items:center;justify-content:center;
+        font-weight:800;font-size:15px;flex-shrink:0;color:white;
+      ">1</div>
+      <div>
+        <div style="font-weight:600;font-size:15px;margin-bottom:4px">Appuie sur le bouton Partager</div>
+        <div style="color:#7777aa;font-size:13px;line-height:1.4">
+          En bas de Safari, appuie sur l'icône <strong style="color:#c084fc">⬆️ Partager</strong> (le carré avec une flèche vers le haut)
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 2 -->
+    <div style="display:flex;gap:14px;margin-bottom:18px;align-items:flex-start">
+      <div style="
+        width:36px;height:36px;border-radius:50%;
+        background:linear-gradient(135deg,#7c5cfc,#c084fc);
+        display:flex;align-items:center;justify-content:center;
+        font-weight:800;font-size:15px;flex-shrink:0;color:white;
+      ">2</div>
+      <div>
+        <div style="font-weight:600;font-size:15px;margin-bottom:4px">Faire défiler et choisir</div>
+        <div style="color:#7777aa;font-size:13px;line-height:1.4">
+          Fais défiler le menu et appuie sur <strong style="color:#c084fc">"Sur l'écran d'accueil"</strong> 🏠
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 3 -->
+    <div style="display:flex;gap:14px;margin-bottom:28px;align-items:flex-start">
+      <div style="
+        width:36px;height:36px;border-radius:50%;
+        background:linear-gradient(135deg,#7c5cfc,#c084fc);
+        display:flex;align-items:center;justify-content:center;
+        font-weight:800;font-size:15px;flex-shrink:0;color:white;
+      ">3</div>
+      <div>
+        <div style="font-weight:600;font-size:15px;margin-bottom:4px">Confirmer l'ajout</div>
+        <div style="color:#7777aa;font-size:13px;line-height:1.4">
+          Appuie sur <strong style="color:#c084fc">"Ajouter"</strong> en haut à droite. Whispr apparaît sur ton écran d'accueil ! 🎉
+        </div>
+      </div>
+    </div>
+
+    <button onclick="closeIOSGuide()" style="
+      width:100%; padding:16px; border-radius:16px; border:none;
+      background:linear-gradient(135deg,#7c5cfc,#c084fc);
+      color:white; font-family:'DM Sans',sans-serif;
+      font-size:16px; font-weight:600; cursor:pointer;
+    ">Compris ! 👍</button>
+
+    <button onclick="closeIOSGuide()" style="
+      width:100%; padding:12px; border-radius:16px;
+      border:1px solid #ffffff15; background:transparent;
+      color:#7777aa; font-family:'DM Sans',sans-serif;
+      font-size:14px; cursor:pointer; margin-top:10px;
+    ">Fermer</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     BANNIÈRE ANDROID PWA
+══════════════════════════════════════ -->
+<div id="android-banner" style="
+  display:none; position:fixed;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 16px);
+  left:16px; right:16px; z-index:9997;
+  background:#12121a; border:1px solid #7c5cfc40;
+  border-radius:18px; padding:16px 18px;
+  display:flex; align-items:center; gap:14px;
+  box-shadow:0 8px 32px #7c5cfc30;
+  animation: slideUp 0.4s ease both;
+">
+  <div style="
+    width:44px;height:44px;border-radius:12px;flex-shrink:0;
+    background:linear-gradient(135deg,#7c5cfc,#c084fc);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+  ">💜</div>
+  <div style="flex:1">
+    <div style="font-weight:600;font-size:14px">Installer Whispr</div>
+    <div style="color:#7777aa;font-size:12px">Ajouter à l'écran d'accueil</div>
+  </div>
+  <button id="pwa-install-btn" onclick="installPWA()" style="
+    background:linear-gradient(135deg,#7c5cfc,#c084fc);
+    border:none;border-radius:10px;color:white;
+    font-family:'DM Sans',sans-serif;font-weight:600;
+    font-size:13px;padding:9px 14px;cursor:pointer;
+  ">Installer</button>
+  <button onclick="dismissAndroidBanner()" style="
+    background:transparent;border:none;color:#7777aa;
+    font-size:20px;cursor:pointer;padding:4px;line-height:1;
+  ">×</button>
+</div>
+
+<style>
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(30px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  #paywall-modal.show { display:flex !important; }
+  #ios-guide.show { display:flex !important; }
+  #android-banner.show { display:flex !important; }
+
+  /* Compteur messages anonymes dans la page public */
+  .anon-counter {
+    text-align:center; font-size:13px; color:var(--muted);
+    margin-bottom:12px; padding:8px 16px;
+    background:var(--dark2); border-radius:10px;
+  }
+  .anon-counter span { color:var(--accent2); font-weight:600; }
+</style>
+
+<script>
+  // ── PWA Install Logic ──
+  let deferredPrompt = null;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isAndroid = /Android/.test(navigator.userAgent);
+  const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+  // Android : intercepter l'événement d'installation
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Afficher la bannière Android après 3 secondes
+    setTimeout(() => {
+      if (!isInStandaloneMode) {
+        document.getElementById('android-banner').classList.add('show');
+      }
+    }, 3000);
+  });
+
+  window.installPWA = async function() {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      document.getElementById('android-banner').classList.remove('show');
+    }
+    deferredPrompt = null;
+  };
+
+  window.dismissAndroidBanner = function() {
+    document.getElementById('android-banner').classList.remove('show');
+    sessionStorage.setItem('pwa-dismissed', '1');
+  };
+
+  // iOS : montrer le guide si pas encore installé
+  window.showIOSGuide = function() {
+    document.getElementById('ios-guide').classList.add('show');
+  };
+
+  window.closeIOSGuide = function() {
+    document.getElementById('ios-guide').classList.remove('show');
+    localStorage.setItem('ios-guide-shown', '1');
+  };
+
+  // Sur iOS, afficher un bouton d'aide dans la landing
+  if (isIOS && !isInStandaloneMode && !localStorage.getItem('ios-guide-shown')) {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const btn = document.createElement('button');
+        btn.innerHTML = '📲 Installer sur iPhone';
+        btn.onclick = showIOSGuide;
+        btn.style.cssText = `
+          position:fixed; bottom:calc(env(safe-area-inset-bottom,0px)+16px);
+          left:50%; transform:translateX(-50%);
+          background:linear-gradient(135deg,#7c5cfc,#c084fc);
+          color:white; border:none; border-radius:100px;
+          padding:12px 24px; font-family:'DM Sans',sans-serif;
+          font-size:14px; font-weight:600; cursor:pointer;
+          z-index:9996; white-space:nowrap;
+          box-shadow:0 4px 20px #7c5cfc50;
+          animation:slideUp 0.4s ease both;
+        `;
+        document.body.appendChild(btn);
+      }, 2000);
+    });
+  }
 </script>
 </body>
 </html>

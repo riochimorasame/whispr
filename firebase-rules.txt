@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Profils utilisateurs ──
+    match /users/{userId} {
+
+      // Lecture publique (pour retrouver un user par username)
+      allow read: if true;
+
+      // Écriture uniquement par le propriétaire authentifié
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+
+      // ── Messages ──
+      match /messages/{messageId} {
+
+        // Le propriétaire du compte peut tout faire
+        allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+
+        // Envoi anonyme : tout le monde peut créer, avec conditions strictes
+        allow create: if
+          request.resource.data.keys().hasAll([
+            'content', 'conversation', 'read', 'replied',
+            'createdAt', 'token', 'exchangeCount'
+          ]) &&
+          request.resource.data.content is string &&
+          request.resource.data.content.size() > 0 &&
+          request.resource.data.content.size() <= 1000 &&
+          request.resource.data.read == false &&
+          request.resource.data.replied == false &&
+          request.resource.data.exchangeCount == 1;
+
+        // Mise à jour anonyme via token (réponses dans la conversation)
+        // - Le token ne peut pas être modifié
+        // - Le nombre d'échanges est limité à 6 (3 allers-retours)
+        // - Les champs sensibles (hints) ne peuvent pas être modifiés
+        allow update: if
+          request.auth == null &&
+          resource.data.token == request.resource.data.token &&
+          resource.data.hints == request.resource.data.hints &&
+          request.resource.data.exchangeCount <= 6 &&
+          request.resource.data.exchangeCount > resource.data.exchangeCount;
+      }
+    }
+  }
+}
