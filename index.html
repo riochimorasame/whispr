@@ -540,7 +540,7 @@
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
- const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyA6h9QC2n2yqJT0OKbBnCDRDu3Ce6xdGv0",
   authDomain: "anonyme-8c9c2.firebaseapp.com",
   projectId: "anonyme-8c9c2",
@@ -564,8 +564,9 @@
         currentUsername = snap.data().username;
         window.currentUsername = currentUsername;
         document.getElementById('nav-username').textContent = '@' + currentUsername;
-        const baseUrl = window.location.origin + window.location.pathname;
-        document.getElementById('my-link').textContent = `${baseUrl}?u=${currentUsername}`;
+        // ✅ Remplace par ton URL Vercel exact
+        const APP_URL = "https://whispr.vercel.app";
+        document.getElementById('my-link').textContent = `${APP_URL}?u=${currentUsername}`;
         loadMessages();
         showPage('dashboard');
       }
