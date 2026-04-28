@@ -1,0 +1,15 @@
+{
+  "appId": "com.whispr.app",
+  "appName": "Whispr",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "buildOptions": {
+      "keystorePath": null,
+      "keystoreAlias": null
+    }
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
