@@ -21,6 +21,7 @@
       --muted: #7777aa;
       --danger: #ff4f6a;
       --success: #4fefaa;
+      --warning: #f59e0b;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -110,6 +111,7 @@
       -webkit-user-select: none;
     }
     .btn:active { transform: scale(0.96); opacity: 0.85; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -145,10 +147,39 @@
       border-color: var(--accent)80;
       box-shadow: 0 0 0 3px var(--glow);
     }
+    input.input-error { border-color: var(--danger) !important; box-shadow: 0 0 0 3px #ff4f6a20 !important; }
     input::placeholder, textarea::placeholder { color: var(--muted); }
 
     .form-group { margin-bottom: 14px; }
     .form-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; display: block; font-weight: 500; }
+
+    /* ── USERNAME CHECK INDICATOR ── */
+    .username-wrap { position: relative; }
+    .username-status {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 12px; font-weight: 600;
+    }
+    .username-status.available { color: var(--success); }
+    .username-status.taken { color: var(--danger); }
+    .username-status.checking { color: var(--muted); }
+    #input-username { padding-right: 80px; }
+
+    /* ── CHAR COUNTER ── */
+    .char-counter {
+      text-align: right; font-size: 11px; color: var(--muted);
+      margin-top: 6px; transition: color 0.2s;
+    }
+    .char-counter.warning { color: var(--warning); }
+    .char-counter.danger { color: var(--danger); }
+
+    /* ── LOADING SPINNER ── */
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── LANDING ── */
     #page-landing .scroll-area {
@@ -217,6 +248,14 @@
     .auth-switch { text-align: center; margin-top: 20px; font-size: 14px; color: var(--muted); }
     .auth-switch a { color: var(--accent2); cursor: pointer; }
 
+    /* ── PASSWORD STRENGTH ── */
+    .pwd-strength { margin-top: 8px; display: flex; gap: 4px; }
+    .pwd-bar { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background 0.3s; }
+    .pwd-bar.weak { background: var(--danger); }
+    .pwd-bar.medium { background: var(--warning); }
+    .pwd-bar.strong { background: var(--success); }
+    .pwd-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
     /* ── DASHBOARD ── */
     #page-dashboard .scroll-area { padding: 20px 18px; padding-bottom: calc(var(--safe-bottom) + 24px); }
 
@@ -242,6 +281,16 @@
       font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s;
     }
     .copy-btn.copied { background: var(--success); color: #000; }
+
+    /* ── SHARE BUTTONS ── */
+    .share-row { display: flex; gap: 8px; margin-top: 12px; }
+    .share-btn {
+      flex: 1; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 6px; font-size: 12px; font-weight: 600;
+      color: var(--muted); font-family: 'DM Sans', sans-serif; cursor: pointer;
+      transition: all 0.15s; text-align: center;
+    }
+    .share-btn:active { background: var(--surface); color: var(--text); }
 
     .section-title {
       font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
@@ -302,6 +351,26 @@
       padding: 7px 12px; cursor: pointer;
     }
 
+    /* ── CONFIRM MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-sheet {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 24px 24px 0 0; padding: 24px 20px;
+      padding-bottom: calc(var(--safe-bottom) + 20px);
+      width: 100%; max-width: 480px;
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .modal-sub { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-danger { background: var(--danger); color: white; }
+
     #page-chat .scroll-area { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
 
     .chat-bubble {
@@ -338,6 +407,7 @@
       box-shadow: 0 4px 14px var(--glow); transition: transform 0.1s;
     }
     .send-btn:active { transform: scale(0.92); }
+    .send-btn:disabled { opacity: 0.4; transform: none; }
 
     /* ── PUBLIC ── */
     #page-public .scroll-area { padding: 28px 22px; padding-bottom: calc(var(--safe-bottom) + 28px); }
@@ -385,6 +455,7 @@
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
     .toast.success { border-color: var(--success)40; color: var(--success); }
+    .toast.error { border-color: var(--danger)40; color: var(--danger); }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
@@ -405,7 +476,7 @@
     </div>
   </div>
   <div class="scroll-area">
-    <div class="hero-badge">✦ 100% anonyme & gratuit</div>
+    <div class="hero-badge">✦ Messagerie anonyme & gratuite</div>
     <h1 class="hero-title">Reçois des<br/><span>messages<br/>anonymes</span></h1>
     <p class="hero-sub">Partage ton lien, laisse les autres t'écrire anonymement, et réponds en chat privé.</p>
     <div class="hero-cta">
@@ -413,7 +484,7 @@
       <button class="btn btn-ghost btn-full" onclick="showPublicDemo()">Voir une démo</button>
     </div>
     <div class="features">
-      <div class="feature-pill"><div class="dot"></div>Totalement anonyme</div>
+      <div class="feature-pill"><div class="dot"></div>Expéditeur inconnu</div>
       <div class="feature-pill"><div class="dot" style="background:var(--accent2)"></div>Chat en direct</div>
       <div class="feature-pill"><div class="dot" style="background:var(--success)"></div>Lien partageable</div>
       <div class="feature-pill"><div class="dot" style="background:#fcd34d"></div>100% gratuit</div>
@@ -435,7 +506,11 @@
     <p class="auth-sub fadein" id="auth-sub">Rejoins Whispr et génère ton lien anonyme</p>
     <div class="form-group fadein" id="field-name" style="display:none">
       <label class="form-label">Nom d'utilisateur</label>
-      <input type="text" id="input-username" placeholder="ex: alex_whispr" maxlength="20" autocorrect="off" autocapitalize="none"/>
+      <div class="username-wrap">
+        <input type="text" id="input-username" placeholder="ex: alex_whispr" maxlength="20"
+               autocorrect="off" autocapitalize="none" oninput="checkUsername(this.value)"/>
+        <span class="username-status" id="username-status"></span>
+      </div>
     </div>
     <div class="form-group fadein">
       <label class="form-label">Email</label>
@@ -443,9 +518,16 @@
     </div>
     <div class="form-group fadein">
       <label class="form-label">Mot de passe</label>
-      <input type="password" id="input-password" placeholder="••••••••" autocomplete="current-password"/>
+      <input type="password" id="input-password" placeholder="••••••••"
+             autocomplete="current-password" oninput="checkPasswordStrength(this.value)"/>
+      <div class="pwd-strength" id="pwd-strength" style="display:none">
+        <div class="pwd-bar" id="bar1"></div>
+        <div class="pwd-bar" id="bar2"></div>
+        <div class="pwd-bar" id="bar3"></div>
+      </div>
+      <div class="pwd-label" id="pwd-label"></div>
     </div>
-    <button class="btn btn-primary btn-full fadein" style="margin-top:6px" onclick="handleAuth()">
+    <button class="btn btn-primary btn-full fadein" style="margin-top:6px" id="auth-btn" onclick="handleAuth()">
       <span id="auth-btn-text">Créer mon compte</span>
     </button>
     <div class="auth-divider">ou</div>
@@ -473,7 +555,11 @@
         <span id="my-link">whispr.app/u/toi</span>
         <button class="copy-btn" id="copy-btn" onclick="copyLink()">Copier</button>
       </div>
-      <p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5">Partage ce lien sur tes réseaux 💜</p>
+      <div class="share-row">
+        <button class="share-btn" onclick="shareWhatsApp()">WhatsApp</button>
+        <button class="share-btn" onclick="shareTelegram()">Telegram</button>
+        <button class="share-btn" onclick="shareNative()">Partager…</button>
+      </div>
     </div>
     <div class="section-title">
       Messages reçus
@@ -496,12 +582,12 @@
       <h3>Anonyme 👻</h3>
       <span id="chat-time">Message reçu récemment</span>
     </div>
-    <button class="del-btn" onclick="deleteMessage()">Suppr.</button>
+    <button class="del-btn" onclick="confirmDelete()">Suppr.</button>
   </div>
   <div class="scroll-area" id="chat-messages"></div>
   <div class="chat-input-bar">
     <textarea id="reply-input" rows="1" placeholder="Répondre..." oninput="autoResize(this)"></textarea>
-    <button class="send-btn" onclick="sendReply()">➤</button>
+    <button class="send-btn" id="send-btn" onclick="sendReply()">➤</button>
   </div>
 </div>
 
@@ -516,19 +602,37 @@
   <div class="scroll-area">
     <div class="profile-avatar" id="public-avatar">A</div>
     <div class="public-name" id="public-name">alex_whispr</div>
-    <div class="public-desc">Envoie-moi un message anonyme 👀<br/>Je ne saurai jamais qui tu es.</div>
+    <div class="public-desc">Envoie-moi un message anonyme 👀<br/>Je ne verrai jamais qui tu es.</div>
     <div id="anon-form-wrap">
-      <div class="anon-hint"><span>👻</span><span>Ton identité restera totalement cachée.</span></div>
+      <div class="anon-hint"><span>👻</span><span>L'expéditeur reste inconnu du destinataire.</span></div>
       <div class="anon-form">
-        <textarea id="anon-message" rows="4" placeholder="Écris ton message ici..."></textarea>
-        <button class="btn btn-primary btn-full" onclick="sendAnonMessage()">Envoyer anonymement 💜</button>
+        <div style="position:relative">
+          <textarea id="anon-message" rows="4" placeholder="Écris ton message ici..."
+                    maxlength="1000" oninput="updateAnonCounter()"></textarea>
+          <div class="char-counter" id="anon-counter">0 / 1000</div>
+        </div>
+        <button class="btn btn-primary btn-full" id="anon-send-btn" onclick="sendAnonMessage()">
+          <span id="anon-btn-text">Envoyer anonymement 💜</span>
+        </button>
       </div>
     </div>
     <div class="success-msg" id="success-msg">
       <div class="success-icon">🚀</div>
       <h3>Message envoyé !</h3>
-      <p>Le destinataire recevra ton message.<br/>Il ne saura jamais que c'est toi.</p>
+      <p>Le destinataire recevra ton message.</p>
       <button class="btn btn-ghost" style="margin-top:20px;width:100%" onclick="resetAnonForm()">Envoyer un autre</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMATION SUPPRESSION -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal-sheet">
+    <div class="modal-title">Supprimer ce message ?</div>
+    <div class="modal-sub">Cette action est irréversible. Le message et toute la conversation seront perdus.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-full" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-danger btn-full" onclick="deleteMessage()">Supprimer</button>
     </div>
   </div>
 </div>
@@ -538,9 +642,13 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, doc, setDoc, getDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const firebaseConfig = {
+  // ─────────────────────────────────────────────────────────────
+  // REMPLACE CES VALEURS PAR TA VRAIE CONFIG FIREBASE
+  // Ne commit JAMAIS ce fichier avec de vraies clés dans un repo public
+  // ─────────────────────────────────────────────────────────────
+ const firebaseConfig = {
   apiKey: "AIzaSyA6h9QC2n2yqJT0OKbBnCDRDu3Ce6xdGv0",
   authDomain: "anonyme-8c9c2.firebaseapp.com",
   projectId: "anonyme-8c9c2",
@@ -555,52 +663,150 @@ const firebaseConfig = {
 
   let currentUser = null, currentUsername = null, currentMessageId = null, currentConversation = [];
 
+  // ── Vérification de la disponibilité du username (debounced) ──
+  let usernameTimer = null;
+  let usernameAvailable = false;
+
+  window.checkUsername = function(val) {
+    const status = document.getElementById('username-status');
+    clearTimeout(usernameTimer);
+    usernameAvailable = false;
+    if (!val || val.length < 3) { status.textContent = ''; return; }
+    status.textContent = '…'; status.className = 'username-status checking';
+    usernameTimer = setTimeout(async () => {
+      try {
+        const snap = await getDoc(doc(db, "usernames", val.toLowerCase()));
+        if (snap.exists()) {
+          status.textContent = '✗ Pris'; status.className = 'username-status taken';
+          usernameAvailable = false;
+        } else {
+          status.textContent = '✓ Dispo'; status.className = 'username-status available';
+          usernameAvailable = true;
+        }
+      } catch { status.textContent = ''; }
+    }, 600);
+  };
+
+  // ── Force de mot de passe ──
+  window.checkPasswordStrength = function(val) {
+    const strength = document.getElementById('pwd-strength');
+    const label = document.getElementById('pwd-label');
+    const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3')];
+    if (!val) { strength.style.display = 'none'; label.textContent = ''; return; }
+    strength.style.display = 'flex';
+    const hasLower = /[a-z]/.test(val);
+    const hasUpper = /[A-Z]/.test(val);
+    const hasNum = /\d/.test(val);
+    const hasSpec = /[^a-zA-Z0-9]/.test(val);
+    const score = (val.length >= 8 ? 1 : 0) + (hasUpper || hasLower ? 1 : 0) + ((hasNum || hasSpec) ? 1 : 0);
+    bars.forEach((b, i) => {
+      b.className = 'pwd-bar';
+      if (i < score) b.classList.add(score === 1 ? 'weak' : score === 2 ? 'medium' : 'strong');
+    });
+    label.textContent = score === 1 ? 'Trop court' : score === 2 ? 'Moyen' : 'Fort 💪';
+    label.style.color = score === 1 ? 'var(--danger)' : score === 2 ? 'var(--warning)' : 'var(--success)';
+  };
+
+  // ── Auth state ──
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
-      const snap = await getDoc(doc(db, "users", user.uid));
-      if (snap.exists()) {
-        currentUsername = snap.data().username;
-        window.currentUsername = currentUsername;
-        document.getElementById('nav-username').textContent = '@' + currentUsername;
-        document.getElementById('my-link').textContent = `whispr.app/u/${currentUsername}`;
-        loadMessages();
-        showPage('dashboard');
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists()) {
+          currentUsername = snap.data().username;
+          window.currentUsername = currentUsername;
+          document.getElementById('nav-username').textContent = '@' + currentUsername;
+          document.getElementById('my-link').textContent = `whispr.app/u/${currentUsername}`;
+          loadMessages();
+          // Ne redirige vers dashboard que si on n'est pas sur une page /u/
+          const redirect = sessionStorage.getItem('redirect');
+          const urlMatch = (redirect || window.location.pathname).match(/^\/u\/([^/]+)$/);
+          if (!urlMatch) showPage('dashboard');
+        } else {
+          // Compte Firebase Auth sans profil Firestore → nettoyage
+          await signOut(auth);
+          showPage('auth', 'register');
+          showToast('Compte incomplet, réinscris-toi');
+        }
+      } catch(e) {
+        showPage('landing');
       }
     }
   });
 
+  // ── Inscription / Connexion ──
   window.handleAuth = async function() {
     const isReg = document.getElementById('field-name').style.display !== 'none';
     const email = document.getElementById('input-email').value.trim();
     const password = document.getElementById('input-password').value;
     const username = document.getElementById('input-username').value.trim().toLowerCase();
-    if (!email || !password) return showToast('Remplis tous les champs');
+    const btn = document.getElementById('auth-btn');
+
+    if (!email || !password) return showToast('Remplis tous les champs', false);
+
+    if (isReg) {
+      if (!username || username.length < 3) return showToast("Username : 3 caractères minimum");
+      if (!usernameAvailable) return showToast("Ce username est déjà pris");
+      if (password.length < 8) return showToast("Mot de passe : 8 caractères minimum");
+    }
+
+    btn.disabled = true;
+    document.getElementById('auth-btn-text').innerHTML = '<span class="spinner"></span>';
+
     try {
       if (isReg) {
-        if (!username) return showToast("Choisis un nom d'utilisateur");
+        // Double check côté client avant d'écrire
+        const usernameSnap = await getDoc(doc(db, "usernames", username));
+        if (usernameSnap.exists()) {
+          showToast("Username déjà pris");
+          btn.disabled = false;
+          document.getElementById('auth-btn-text').textContent = 'Créer mon compte';
+          return;
+        }
         const cred = await createUserWithEmailAndPassword(auth, email, password);
+        // Écriture atomique : profil + lookup username
         await setDoc(doc(db, "users", cred.user.uid), { username, email, createdAt: serverTimestamp() });
+        await setDoc(doc(db, "usernames", username), { uid: cred.user.uid });
         currentUsername = username; window.currentUsername = username;
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
     } catch (e) {
-      const msgs = { 'auth/email-already-in-use':'Email déjà utilisé','auth/weak-password':'Mot de passe trop court','auth/wrong-password':'Mot de passe incorrect','auth/user-not-found':'Compte introuvable' };
+      const msgs = {
+        'auth/email-already-in-use': 'Email déjà utilisé',
+        'auth/weak-password': 'Mot de passe trop court (min. 8 car.)',
+        'auth/wrong-password': 'Mot de passe incorrect',
+        'auth/user-not-found': 'Compte introuvable',
+        'auth/invalid-email': 'Email invalide',
+        'auth/too-many-requests': 'Trop de tentatives, réessaie plus tard'
+      };
       showToast(msgs[e.code] || 'Erreur : ' + e.message);
+      btn.disabled = false;
+      document.getElementById('auth-btn-text').textContent = isReg ? 'Créer mon compte' : 'Se connecter';
     }
   };
 
-  window.logout = async function() { await signOut(auth); currentUser = null; currentUsername = null; showPage('landing'); };
+  window.logout = async function() {
+    await signOut(auth);
+    currentUser = null; currentUsername = null;
+    showPage('landing');
+  };
 
+  // ── Chargement des messages ──
   async function loadMessages() {
     if (!currentUser) return;
     const q = query(collection(db, "users", currentUser.uid, "messages"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snap) => {
       const list = document.getElementById('message-list');
       const unread = snap.docs.filter(d => !d.data().read).length;
-      document.getElementById('msg-count').textContent = unread > 0 ? `${unread} nouveau${unread > 1 ? 'x' : ''}` : `${snap.size}`;
-      if (snap.empty) { list.innerHTML = `<div class="empty-state"><div class="empty-icon">💌</div><p>Aucun message.<br/>Partage ton lien !</p></div>`; return; }
+      document.getElementById('msg-count').textContent = unread > 0
+        ? `${unread} nouveau${unread > 1 ? 'x' : ''}`
+        : `${snap.size}`;
+      if (snap.empty) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-icon">💌</div><p>Aucun message.<br/>Partage ton lien !</p></div>`;
+        return;
+      }
       list.innerHTML = '';
       snap.docs.forEach((d, i) => {
         const data = d.data();
@@ -608,7 +814,12 @@ const firebaseConfig = {
         el.className = `message-item fadein ${!data.read ? 'unread' : ''}`;
         el.style.animationDelay = `${i * 0.05}s`;
         const ts = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
-        el.innerHTML = `<div class="msg-preview">${escapeHtml(data.content)}</div><div class="msg-meta"><span>${timeAgo(ts)}</span><span class="msg-tag ${data.replied ? 'replied' : ''}">${data.replied ? '✓ Répondu' : 'Sans réponse'}</span></div>`;
+        el.innerHTML = `
+          <div class="msg-preview">${escapeHtml(data.content)}</div>
+          <div class="msg-meta">
+            <span>${timeAgo(ts)}</span>
+            <span class="msg-tag ${data.replied ? 'replied' : ''}">${data.replied ? '✓ Répondu' : 'Sans réponse'}</span>
+          </div>`;
         el.onclick = () => openChat(d.id, data);
         list.appendChild(el);
       });
@@ -621,7 +832,8 @@ const firebaseConfig = {
     await updateDoc(doc(db, "users", currentUser.uid, "messages", msgId), { read: true });
     const ts = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
     document.getElementById('chat-time').textContent = 'Reçu ' + timeAgo(ts);
-    renderChat(); showPage('chat');
+    renderChat();
+    showPage('chat');
   };
 
   function renderChat() {
@@ -629,50 +841,106 @@ const firebaseConfig = {
     container.innerHTML = '';
     currentConversation.forEach((msg, i) => {
       const wrap = document.createElement('div');
-      wrap.style.display = 'flex'; wrap.style.animationDelay = `${i * 0.06}s`; wrap.className = 'fadein';
+      wrap.style.display = 'flex';
+      wrap.style.animationDelay = `${i * 0.06}s`;
+      wrap.className = 'fadein';
       wrap.innerHTML = `<div class="chat-bubble ${msg.role === 'anon' ? 'bubble-anon' : 'bubble-me'}">${escapeHtml(msg.text)}<div class="bubble-time">${msg.ts?.toDate ? timeAgo(msg.ts.toDate()) : 'maintenant'}</div></div>`;
       container.appendChild(wrap);
     });
     setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
   }
 
+  // ── Envoi réponse avec guard ──
   window.sendReply = async function() {
     const input = document.getElementById('reply-input');
+    const btn = document.getElementById('send-btn');
     const text = input.value.trim();
     if (!text || !currentMessageId) return;
+    if (text.length > 2000) return showToast('Message trop long (max 2000 car.)');
+    btn.disabled = true;
     currentConversation.push({ role: 'me', text, ts: new Date() });
     input.value = ''; input.style.height = 'auto';
     renderChat();
-    await updateDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId), { conversation: currentConversation, replied: true });
+    try {
+      await updateDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId), {
+        conversation: currentConversation, replied: true
+      });
+    } catch (e) {
+      showToast('Erreur envoi : ' + e.message);
+    } finally {
+      btn.disabled = false;
+    }
   };
 
+  // ── Suppression avec confirmation ──
+  window.confirmDelete = function() {
+    document.getElementById('delete-modal').classList.add('active');
+  };
+  window.closeModal = function() {
+    document.getElementById('delete-modal').classList.remove('active');
+  };
   window.deleteMessage = async function() {
     if (!currentMessageId) return;
-    await deleteDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId));
-    showToast('Supprimé ✓', true); showPage('dashboard');
+    closeModal();
+    try {
+      await deleteDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId));
+      showToast('Supprimé ✓', true);
+      showPage('dashboard');
+    } catch (e) {
+      showToast('Erreur suppression');
+    }
   };
 
+  // ── Envoi message anonyme — lookup O(1) ──
   window.sendAnonMessage = async function() {
     const text = document.getElementById('anon-message').value.trim();
     const targetUser = document.getElementById('public-name').textContent;
+    const btn = document.getElementById('anon-send-btn');
+    const btnText = document.getElementById('anon-btn-text');
+
     if (!text) return showToast("Écris un message d'abord !");
+    if (text.length > 1000) return showToast('Message trop long (max 1000 car.)');
+
+    btn.disabled = true;
+    btnText.innerHTML = '<span class="spinner"></span> Envoi…';
+
     try {
-      const usersSnap = await getDocs(collection(db, "users"));
-      let targetUid = null;
-      usersSnap.forEach(d => { if (d.data().username === targetUser) targetUid = d.id; });
-      if (!targetUid) return showToast('Utilisateur introuvable');
-      await addDoc(collection(db, "users", targetUid, "messages"), { content: text, conversation: [{ role: 'anon', text, ts: new Date() }], read: false, replied: false, createdAt: serverTimestamp() });
+      // Lookup direct O(1) — plus de scan complet de la collection users
+      const usernameSnap = await getDoc(doc(db, "usernames", targetUser));
+      if (!usernameSnap.exists()) {
+        showToast('Utilisateur introuvable');
+        btn.disabled = false; btnText.textContent = 'Envoyer anonymement 💜';
+        return;
+      }
+      const targetUid = usernameSnap.data().uid;
+
+      await addDoc(collection(db, "users", targetUid, "messages"), {
+        content: text,
+        conversation: [{ role: 'anon', text, ts: new Date() }],
+        read: false,
+        replied: false,
+        createdAt: serverTimestamp()
+      });
+
       document.getElementById('anon-form-wrap').style.display = 'none';
       document.getElementById('success-msg').style.display = 'block';
-    } catch (e) { showToast('Erreur : ' + e.message); }
+    } catch (e) {
+      showToast('Erreur : ' + e.message);
+      btn.disabled = false;
+      btnText.textContent = 'Envoyer anonymement 💜';
+    }
   };
 
   window.resetAnonForm = function() {
     document.getElementById('anon-message').value = '';
+    document.getElementById('anon-counter').textContent = '0 / 1000';
     document.getElementById('anon-form-wrap').style.display = 'block';
     document.getElementById('success-msg').style.display = 'none';
+    document.getElementById('anon-send-btn').disabled = false;
+    document.getElementById('anon-btn-text').textContent = 'Envoyer anonymement 💜';
   };
 
+  // ── Copier lien ──
   window.copyLink = function() {
     const link = document.getElementById('my-link').textContent;
     navigator.clipboard.writeText(link).then(() => {
@@ -682,7 +950,36 @@ const firebaseConfig = {
     });
   };
 
-  function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+  // ── Partage natif / WhatsApp / Telegram ──
+  window.shareNative = function() {
+    const link = document.getElementById('my-link').textContent;
+    if (navigator.share) {
+      navigator.share({ title: 'Whispr', text: 'Envoie-moi un message anonyme 👻', url: 'https://' + link });
+    } else {
+      copyLink();
+    }
+  };
+  window.shareWhatsApp = function() {
+    const link = document.getElementById('my-link').textContent;
+    window.open(`https://wa.me/?text=${encodeURIComponent('Envoie-moi un message anonyme 👻 https://' + link)}`);
+  };
+  window.shareTelegram = function() {
+    const link = document.getElementById('my-link').textContent;
+    window.open(`https://t.me/share/url?url=${encodeURIComponent('https://' + link)}&text=${encodeURIComponent('Envoie-moi un message anonyme 👻')}`);
+  };
+
+  // ── Compteur caractères page publique ──
+  window.updateAnonCounter = function() {
+    const val = document.getElementById('anon-message').value.length;
+    const el = document.getElementById('anon-counter');
+    el.textContent = `${val} / 1000`;
+    el.className = 'char-counter' + (val > 900 ? ' danger' : val > 750 ? ' warning' : '');
+  };
+
+  // ── Utilitaires ──
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
   function timeAgo(date) {
     const diff = (Date.now() - date.getTime()) / 1000;
     if (diff < 60) return "à l'instant";
@@ -692,7 +989,8 @@ const firebaseConfig = {
   }
   function showToast(msg, ok = false) {
     const t = document.getElementById('toast');
-    t.textContent = msg; t.className = `toast show ${ok ? 'success' : ''}`;
+    t.textContent = msg;
+    t.className = `toast show ${ok ? 'success' : ''}`;
     setTimeout(() => t.className = 'toast', 2800);
   }
   window.showToast = showToast;
@@ -716,6 +1014,15 @@ const firebaseConfig = {
     document.getElementById('auth-title').textContent = isReg ? 'Créer un compte' : 'Connexion';
     document.getElementById('auth-sub').textContent = isReg ? 'Rejoins Whispr et génère ton lien anonyme' : 'Bon retour sur Whispr 👋';
     document.getElementById('field-name').style.display = isReg ? 'block' : 'none';
+    // Vide le mot de passe et masque les barres à chaque changement de mode
+    document.getElementById('input-password').value = '';
+    document.getElementById('pwd-strength').style.display = 'none';
+    document.getElementById('pwd-label').textContent = '';
+    // En mode login, désactive l'indicateur de force
+    document.getElementById('input-password').oninput = isReg
+      ? function() { checkPasswordStrength(this.value); }
+      : null;
+    document.getElementById('auth-btn').disabled = false;
     document.getElementById('auth-btn-text').textContent = isReg ? 'Créer mon compte' : 'Se connecter';
     document.getElementById('auth-switch').innerHTML = isReg
       ? 'Déjà un compte ? <a onclick="toggleAuth()">Se connecter</a>'
@@ -735,10 +1042,36 @@ const firebaseConfig = {
   function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 100) + 'px'; }
   window.autoResize = autoResize;
 
+  // ── Routing GitHub Pages /u/:username ──
+  // GitHub Pages redirige les 404 vers 404.html qui sauvegarde l'URL dans sessionStorage
+  (function() {
+    const redirect = sessionStorage.getItem('redirect');
+    sessionStorage.removeItem('redirect');
+    const path = redirect || window.location.pathname;
+    const urlMatch = path.match(/^\/u\/([^/]+)$/);
+    if (!urlMatch) return;
+    const username = urlMatch[1].toLowerCase();
+    // Affiche la page publique immédiatement avec le username de l'URL
+    document.getElementById('public-name').textContent = username;
+    document.getElementById('public-avatar').textContent = username[0].toUpperCase();
+    // Masque la landing et affiche public
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-public').classList.add('active');
+  })();
+
+  // Fermer le modal en cliquant en dehors
+  document.getElementById('delete-modal').addEventListener('click', function(e) {
+    if (e.target === this) window.closeModal && closeModal();
+  });
+
+  // Enter pour envoyer la réponse
   document.addEventListener('keydown', (e) => {
     const replyInput = document.getElementById('reply-input');
-    if (document.getElementById('page-chat').classList.contains('active') && e.key === 'Enter' && !e.shiftKey && document.activeElement === replyInput) {
-      e.preventDefault(); window.sendReply && window.sendReply();
+    if (document.getElementById('page-chat').classList.contains('active')
+        && e.key === 'Enter' && !e.shiftKey
+        && document.activeElement === replyInput) {
+      e.preventDefault();
+      window.sendReply && window.sendReply();
     }
   });
 </script>

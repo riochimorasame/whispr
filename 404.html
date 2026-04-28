@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Whispr</title>
+  <script>
+    // GitHub Pages sert ce fichier quand une URL n'existe pas (ex: /u/riochi)
+    // On sauvegarde le chemin et on redirige vers index.html qui va le lire
+    sessionStorage.setItem('redirect', window.location.pathname);
+    window.location.replace('/');
+  </script>
+</head>
+<body></body>
+</html>
