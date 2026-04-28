@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # Permet de lancer manuellement depuis GitHub
+  workflow_dispatch:
 
 jobs:
   build-apk:
@@ -12,65 +12,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ─── 1. Récupérer le code ───────────────────────────
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ─── 2. Installer Node.js ───────────────────────────
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      # ─── 3. Installer Java (requis pour Gradle) ─────────
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # ─── 4. Installer les dépendances npm ───────────────
       - name: Install dependencies
         run: npm install
 
-      # ─── 5. Copier index.html dans www/ ─────────────────
       - name: Build web app
         run: npm run build
 
-      # ─── 6. Installer Capacitor CLI globalement ──────────
       - name: Install Capacitor CLI
         run: npm install -g @capacitor/cli
 
-      # ─── 7. Ajouter la plateforme Android ───────────────
       - name: Add Android platform
         run: npx cap add android
-        continue-on-error: true  # Au cas où il existe déjà
+        continue-on-error: true
 
-      # ─── 8. Synchroniser le projet web avec Android ─────
       - name: Sync Capacitor
         run: npx cap sync android
 
-      # ─── 9. Rendre Gradle exécutable ────────────────────
       - name: Make Gradle executable
         run: chmod +x android/gradlew
 
-      # ─── 10. Construire l'APK (debug) ───────────────────
       - name: Build Debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
 
-      # ─── 11. Publier l'APK comme artefact ───────────────
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: whispr-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 30  # Garder l'APK 30 jours
-
-      # ─── 12. Afficher le résumé ──────────────────────────
-      - name: Build summary
-        run: |
-          echo "✅ APK généré avec succès !"
-          echo "📦 Télécharge-le depuis l'onglet Actions > Artifacts"
-          ls -lh android/app/build/outputs/apk/debug/
+          retention-days: 30
