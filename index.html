@@ -31,115 +31,77 @@
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       color: var(--text);
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      position: fixed;
+      height: 100%; width: 100%;
+      overflow: hidden; position: fixed;
     }
 
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
+      content: ''; position: fixed; inset: 0;
       background:
         radial-gradient(ellipse 80% 40% at 20% 10%, #7c5cfc1a 0%, transparent 60%),
         radial-gradient(ellipse 60% 50% at 80% 90%, #c084fc10 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 0;
+      pointer-events: none; z-index: 0;
     }
 
     .page {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-      width: 100%;
-      position: fixed;
-      top: 0; left: 0;
-      z-index: 1;
-      overflow: hidden;
+      display: none; flex-direction: column;
+      height: 100%; width: 100%;
+      position: fixed; top: 0; left: 0;
+      z-index: 1; overflow: hidden;
     }
     .page.active { display: flex; }
 
     .scroll-area {
-      flex: 1;
-      overflow-y: auto;
+      flex: 1; overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       overscroll-behavior: contain;
     }
 
     .status-bar {
-      height: calc(var(--safe-top) + 54px);
-      min-height: 54px;
-      display: flex;
-      align-items: flex-end;
+      height: calc(var(--safe-top) + 54px); min-height: 54px;
+      display: flex; align-items: flex-end;
       padding: 0 20px 12px;
       background: var(--bg)ee;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      position: relative;
-      z-index: 10;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      position: relative; z-index: 10;
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
 
     .status-bar-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
+      display: flex; align-items: center;
+      justify-content: space-between; width: 100%;
     }
 
     .logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 20px;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
     .btn {
-      padding: 12px 20px;
-      border-radius: 14px;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.1s, opacity 0.1s;
+      padding: 12px 20px; border-radius: 14px; border: none;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: transform 0.1s, opacity 0.1s;
       -webkit-user-select: none;
     }
     .btn:active { transform: scale(0.96); opacity: 0.85; }
 
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: white;
-      box-shadow: 0 4px 20px var(--glow);
+      color: white; box-shadow: 0 4px 20px var(--glow);
     }
-
     .btn-ghost {
-      background: var(--surface);
-      color: var(--muted);
-      border: 1px solid var(--border);
-      font-size: 14px;
-      padding: 10px 16px;
+      background: var(--surface); color: var(--muted);
+      border: 1px solid var(--border); font-size: 14px; padding: 10px 16px;
     }
-
     .btn-full { width: 100%; padding: 16px; border-radius: 16px; font-size: 16px; }
 
     input, textarea {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 16px;
-      padding: 15px 16px;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.2s;
-      resize: none;
-      -webkit-appearance: none;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 16px;
+      padding: 15px 16px; width: 100%; outline: none;
+      transition: border-color 0.2s; resize: none; -webkit-appearance: none;
     }
     input:focus, textarea:focus {
       border-color: var(--accent)80;
@@ -150,47 +112,30 @@
     .form-group { margin-bottom: 14px; }
     .form-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; display: block; font-weight: 500; }
 
-    /* ── LANDING ── */
+    /* ══ LANDING ══ */
     #page-landing .scroll-area {
       padding: 36px 24px 48px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
     }
-
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface);
-      border: 1px solid var(--accent)30;
-      border-radius: 100px;
-      padding: 7px 16px;
-      font-size: 13px;
-      color: var(--accent2);
-      margin-bottom: 24px;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--accent)30;
+      border-radius: 100px; padding: 7px 16px;
+      font-size: 13px; color: var(--accent2); margin-bottom: 24px;
     }
-
     .hero-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 38px;
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -1.5px;
-      margin-bottom: 16px;
+      font-family: 'Syne', sans-serif; font-size: 38px;
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -1.5px; margin-bottom: 16px;
     }
     .hero-title span {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-
     .hero-sub { font-size: 16px; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
-
     .hero-cta { display: flex; flex-direction: column; gap: 12px; width: 100%; }
     .hero-cta .btn { font-size: 16px; padding: 16px; border-radius: 16px; }
-
     .features { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 36px; justify-content: center; }
     .feature-pill {
       display: flex; align-items: center; gap: 7px;
@@ -199,111 +144,100 @@
     }
     .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
 
-    /* ── AUTH ── */
+    /* ══ AUTH ══ */
     #page-auth .scroll-area { padding: 32px 24px; padding-bottom: calc(var(--safe-bottom) + 32px); }
-
     .auth-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 6px; }
     .auth-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
-
     .auth-divider {
       text-align: center; color: var(--muted); font-size: 13px; margin: 18px 0; position: relative;
     }
     .auth-divider::before, .auth-divider::after {
       content: ''; position: absolute; top: 50%; width: 44%; height: 1px; background: var(--border);
     }
-    .auth-divider::before { left: 0; }
-    .auth-divider::after { right: 0; }
-
+    .auth-divider::before { left: 0; } .auth-divider::after { right: 0; }
     .auth-switch { text-align: center; margin-top: 20px; font-size: 14px; color: var(--muted); }
     .auth-switch a { color: var(--accent2); cursor: pointer; }
 
-    /* ── DASHBOARD ── */
+    /* ══ DASHBOARD ══ */
     #page-dashboard .scroll-area { padding: 20px 18px; padding-bottom: calc(var(--safe-bottom) + 24px); }
-
     .link-card {
       background: linear-gradient(135deg, var(--accent)18, var(--accent2)08);
-      border: 1px solid var(--accent)30;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 24px;
+      border: 1px solid var(--accent)30; border-radius: 20px; padding: 20px; margin-bottom: 16px;
     }
-
     .link-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent2); font-weight: 600; margin-bottom: 12px; }
-
     .link-url {
       display: flex; align-items: center; gap: 8px;
-      background: var(--bg)90; border: 1px solid var(--border); border-radius: 12px; padding: 11px 14px;
+      background: var(--bg)90; border: 1px solid var(--border);
+      border-radius: 12px; padding: 11px 14px;
     }
     .link-url span { flex: 1; font-size: 13px; word-break: break-all; }
-
     .copy-btn {
-      background: var(--accent); color: white; border: none; border-radius: 8px;
-      padding: 8px 13px; font-size: 12px; font-family: 'DM Sans', sans-serif;
-      font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+      background: var(--accent); color: white; border: none;
+      border-radius: 8px; padding: 8px 13px; font-size: 12px;
+      font-family: 'DM Sans', sans-serif; font-weight: 600;
+      cursor: pointer; white-space: nowrap; transition: all 0.2s;
     }
     .copy-btn.copied { background: var(--success); color: #000; }
+
+    /* Boutons partage */
+    .share-buttons { display: flex; gap: 8px; margin-top: 12px; }
+    .share-btn {
+      flex: 1; padding: 10px 8px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-size: 13px;
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .share-btn:active { background: var(--surface2); }
 
     .section-title {
       font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700;
       margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
     }
-
     .msg-count { background: var(--accent)25; color: var(--accent2); border-radius: 100px; padding: 3px 10px; font-size: 12px; font-weight: 500; }
-
     .message-list { display: flex; flex-direction: column; gap: 10px; }
-
     .message-item {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-      padding: 16px; cursor: pointer; transition: background 0.15s; -webkit-user-select: none;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px; cursor: pointer;
+      transition: background 0.15s; -webkit-user-select: none;
     }
     .message-item:active { background: var(--surface2); }
     .message-item.unread { border-left: 3px solid var(--accent); }
-
     .msg-preview {
       font-size: 15px; line-height: 1.4; margin-bottom: 10px;
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
-
     .msg-meta { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); }
     .msg-tag { background: var(--surface2); border-radius: 100px; padding: 3px 10px; font-size: 11px; }
     .msg-tag.replied { background: var(--success)18; color: var(--success); }
-
     .empty-state { text-align: center; padding: 52px 20px; color: var(--muted); }
     .empty-icon { font-size: 44px; margin-bottom: 14px; }
     .empty-state p { font-size: 15px; line-height: 1.6; }
 
-    /* ── CHAT ── */
+    /* ══ CHAT (owner) ══ */
     .chat-topbar {
-      height: calc(var(--safe-top) + 56px);
-      min-height: 56px;
-      display: flex; align-items: flex-end;
-      padding: 0 16px 12px;
+      height: calc(var(--safe-top) + 56px); min-height: 56px;
+      display: flex; align-items: flex-end; padding: 0 16px 12px;
       background: var(--bg)ee;
       backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       gap: 12px; position: relative; z-index: 10; flex-shrink: 0;
     }
-
     .back-btn {
       background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      color: var(--text); width: 38px; height: 38px; display: flex;
-      align-items: center; justify-content: center; cursor: pointer;
-      font-size: 18px; flex-shrink: 0;
+      color: var(--text); width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; flex-shrink: 0;
     }
     .back-btn:active { background: var(--surface2); }
-
     .chat-info { flex: 1; }
     .chat-info h3 { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
     .chat-info span { font-size: 12px; color: var(--muted); }
-
     .del-btn {
-      background: transparent; border: 1px solid var(--danger)40; border-radius: 10px;
-      color: var(--danger); font-size: 13px; font-family: 'DM Sans', sans-serif;
-      padding: 7px 12px; cursor: pointer;
+      background: transparent; border: 1px solid var(--danger)40;
+      border-radius: 10px; color: var(--danger); font-size: 13px;
+      font-family: 'DM Sans', sans-serif; padding: 7px 12px; cursor: pointer;
     }
-
     #page-chat .scroll-area { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
-
     .chat-bubble {
       max-width: 82%; padding: 13px 16px; border-radius: 20px;
       font-size: 15px; line-height: 1.5;
@@ -318,17 +252,14 @@
     }
     .bubble-time { font-size: 11px; color: var(--muted); margin-top: 5px; }
     .bubble-me .bubble-time { color: rgba(255,255,255,0.55); text-align: right; }
-
     .chat-input-bar {
-      padding: 10px 14px;
-      padding-bottom: calc(var(--safe-bottom) + 10px);
+      padding: 10px 14px; padding-bottom: calc(var(--safe-bottom) + 10px);
       border-top: 1px solid var(--border);
       background: var(--bg)ee;
       backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       display: flex; gap: 10px; align-items: flex-end; flex-shrink: 0;
     }
     .chat-input-bar textarea { border-radius: 20px; padding: 12px 16px; max-height: 100px; }
-
     .send-btn {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       border: none; border-radius: 50%; color: white;
@@ -339,9 +270,8 @@
     }
     .send-btn:active { transform: scale(0.92); }
 
-    /* ── PUBLIC ── */
+    /* ══ PUBLIC (envoi message) ══ */
     #page-public .scroll-area { padding: 28px 22px; padding-bottom: calc(var(--safe-bottom) + 28px); }
-
     .profile-avatar {
       width: 76px; height: 76px; border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -355,28 +285,68 @@
       0%,100% { box-shadow: 0 8px 28px var(--glow); }
       50% { box-shadow: 0 8px 44px #7c5cfc60; }
     }
-
     .public-name { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; text-align: center; margin-bottom: 6px; }
     .public-desc { text-align: center; color: var(--muted); font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
-
     .anon-hint {
       display: flex; align-items: center; gap: 8px;
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 12px; padding: 12px 14px; font-size: 13px; color: var(--muted); margin-bottom: 14px;
     }
-
     .anon-form { display: flex; flex-direction: column; gap: 12px; }
     .anon-form textarea { min-height: 120px; }
 
-    .success-msg { display: none; text-align: center; padding: 28px 16px; }
-    .success-icon { font-size: 52px; margin-bottom: 12px; }
-    .success-msg h3 { font-family: 'Syne', sans-serif; font-size: 22px; margin-bottom: 8px; }
-    .success-msg p { color: var(--muted); font-size: 14px; line-height: 1.5; }
+    /* ══ CONVERSATION ANONYME ══ */
+    #page-conversation .scroll-area { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
 
-    /* ── TOAST ── */
+    /* Barre compteur échanges */
+    .exchange-banner {
+      background: var(--surface);
+      border: 1px solid var(--accent)30;
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 14px;
+      flex-shrink: 0;
+    }
+    .exchange-banner span { font-size: 13px; color: var(--muted); }
+    .exchange-dots { display: flex; gap: 6px; }
+    .exchange-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); transition: background 0.3s;
+    }
+    .exchange-dot.used { background: var(--border); }
+
+    /* Paywall */
+    .paywall {
+      display: none;
+      margin: 16px;
+      background: linear-gradient(135deg, var(--accent)20, var(--accent2)10);
+      border: 1px solid var(--accent)40;
+      border-radius: 20px;
+      padding: 28px 22px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .paywall.show { display: block; }
+    .paywall-icon { font-size: 44px; margin-bottom: 14px; }
+    .paywall h3 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .paywall p { color: var(--muted); font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+    .store-buttons { display: flex; flex-direction: column; gap: 10px; }
+    .store-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 14px; border-radius: 14px; border: none;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: transform 0.1s;
+    }
+    .store-btn:active { transform: scale(0.97); }
+    .store-btn-android { background: #4fefaa; color: #000; }
+    .store-btn-ios { background: white; color: #000; }
+
+    /* ══ TOAST ══ */
     .toast {
-      position: fixed;
-      bottom: calc(var(--safe-bottom) + 20px);
+      position: fixed; bottom: calc(var(--safe-bottom) + 20px);
       left: 50%; transform: translateX(-50%) translateY(80px);
       background: var(--surface2); border: 1px solid var(--border);
       border-radius: 12px; padding: 12px 20px; font-size: 14px;
@@ -396,7 +366,7 @@
 </head>
 <body>
 
-<!-- LANDING -->
+<!-- ══ LANDING ══ -->
 <div id="page-landing" class="page active">
   <div class="status-bar">
     <div class="status-bar-content">
@@ -421,7 +391,7 @@
   </div>
 </div>
 
-<!-- AUTH -->
+<!-- ══ AUTH ══ -->
 <div id="page-auth" class="page">
   <div class="status-bar">
     <div class="status-bar-content">
@@ -435,7 +405,7 @@
     <p class="auth-sub fadein" id="auth-sub">Rejoins Whispr et génère ton lien anonyme</p>
     <div class="form-group fadein" id="field-name" style="display:none">
       <label class="form-label">Nom d'utilisateur</label>
-      <input type="text" id="input-username" placeholder="ex: alex_whispr" maxlength="20" autocorrect="off" autocapitalize="none"/>
+      <input type="text" id="input-username" placeholder="ex: riochi" maxlength="20" autocorrect="off" autocapitalize="none"/>
     </div>
     <div class="form-group fadein">
       <label class="form-label">Email</label>
@@ -455,7 +425,7 @@
   </div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- ══ DASHBOARD ══ -->
 <div id="page-dashboard" class="page">
   <div class="status-bar">
     <div class="status-bar-content">
@@ -470,10 +440,14 @@
     <div class="link-card fadein">
       <div class="link-label">✦ Ton lien anonyme</div>
       <div class="link-url">
-        <span id="my-link">whispr.app/u/toi</span>
+        <span id="my-link">whispr-chi-three.vercel.app?u=toi</span>
         <button class="copy-btn" id="copy-btn" onclick="copyLink()">Copier</button>
       </div>
-      <p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.5">Partage ce lien sur tes réseaux 💜</p>
+      <div class="share-buttons">
+        <button class="share-btn" onclick="shareWhatsApp()">📱 WhatsApp</button>
+        <button class="share-btn" onclick="shareTelegram()">✈️ Telegram</button>
+        <button class="share-btn" onclick="shareNative()">↗️ Partager...</button>
+      </div>
     </div>
     <div class="section-title">
       Messages reçus
@@ -488,7 +462,7 @@
   </div>
 </div>
 
-<!-- CHAT -->
+<!-- ══ CHAT (propriétaire) ══ -->
 <div id="page-chat" class="page">
   <div class="chat-topbar">
     <button class="back-btn" onclick="showPage('dashboard')">←</button>
@@ -505,7 +479,7 @@
   </div>
 </div>
 
-<!-- PUBLIC -->
+<!-- ══ PUBLIC (envoyer message anonyme) ══ -->
 <div id="page-public" class="page">
   <div class="status-bar">
     <div class="status-bar-content">
@@ -515,7 +489,7 @@
   </div>
   <div class="scroll-area">
     <div class="profile-avatar" id="public-avatar">A</div>
-    <div class="public-name" id="public-name">alex_whispr</div>
+    <div class="public-name" id="public-name">alex</div>
     <div class="public-desc">Envoie-moi un message anonyme 👀<br/>Je ne saurai jamais qui tu es.</div>
     <div id="anon-form-wrap">
       <div class="anon-hint"><span>👻</span><span>Ton identité restera totalement cachée.</span></div>
@@ -524,21 +498,69 @@
         <button class="btn btn-primary btn-full" onclick="sendAnonMessage()">Envoyer anonymement 💜</button>
       </div>
     </div>
-    <div class="success-msg" id="success-msg">
-      <div class="success-icon">🚀</div>
-      <h3>Message envoyé !</h3>
-      <p>Le destinataire recevra ton message.<br/>Il ne saura jamais que c'est toi.</p>
-      <button class="btn btn-ghost" style="margin-top:20px;width:100%" onclick="resetAnonForm()">Envoyer un autre</button>
+    <!-- Après envoi : lien vers la conversation -->
+    <div id="sent-success" style="display:none; text-align:center; padding:28px 16px;" class="fadein">
+      <div style="font-size:52px;margin-bottom:14px">🚀</div>
+      <h3 style="font-family:'Syne',sans-serif;font-size:22px;margin-bottom:8px">Message envoyé !</h3>
+      <p style="color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:24px">
+        Tu recevras la réponse sur ce lien.<br/>Garde-le précieusement 👇
+      </p>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Ton lien de conversation</div>
+        <div style="font-size:13px;word-break:break-all" id="thread-link-display"></div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="copyThreadLink()">📋 Copier mon lien de suivi</button>
+      <button class="btn btn-ghost btn-full" style="margin-top:10px" onclick="goToConversation()">Voir la conversation →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONVERSATION ANONYME (suivi réponses) ══ -->
+<div id="page-conversation" class="page">
+  <div class="status-bar">
+    <div class="status-bar-content">
+      <div class="logo">Whispr</div>
+      <button class="btn btn-primary" style="font-size:13px;padding:9px 14px" onclick="downloadApp()">📲 App gratuite</button>
+    </div>
+  </div>
+
+  <!-- Compteur échanges -->
+  <div class="exchange-banner" id="exchange-banner">
+    <span id="exchange-label">3 échanges gratuits restants</span>
+    <div class="exchange-dots" id="exchange-dots"></div>
+  </div>
+
+  <div class="scroll-area" id="convo-messages"></div>
+
+  <!-- Input réponse anonyme (si échanges restants) -->
+  <div class="chat-input-bar" id="convo-input-bar">
+    <textarea id="convo-reply-input" rows="1" placeholder="Répondre anonymement..." oninput="autoResize(this)"></textarea>
+    <button class="send-btn" onclick="sendAnonReply()">➤</button>
+  </div>
+
+  <!-- Paywall après 3 échanges -->
+  <div class="paywall" id="paywall">
+    <div class="paywall-icon">🔓</div>
+    <h3>Continue sur l'app !</h3>
+    <p>Tu as utilisé tes 3 échanges gratuits.<br/>Télécharge Whispr pour continuer à discuter sans limite — c'est gratuit !</p>
+    <div class="store-buttons">
+      <button class="store-btn store-btn-android" onclick="downloadAndroid()">
+        🤖 Télécharger sur Android
+      </button>
+      <button class="store-btn store-btn-ios" onclick="downloadIOS()">
+        🍎 Télécharger sur iOS
+      </button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<!-- ══ FIREBASE ══ -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-  import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, query, orderBy, where, onSnapshot, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
  const firebaseConfig = {
   apiKey: "AIzaSyA6h9QC2n2yqJT0OKbBnCDRDu3Ce6xdGv0",
@@ -550,12 +572,22 @@
 };
 
 
+  const APP_URL = "https://whispr-chi-three.vercel.app";
+
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
   let currentUser = null, currentUsername = null, currentMessageId = null, currentConversation = [];
+  let currentThreadToken = null; // Pour la vue anonyme
+  let currentThreadData = null;
 
+  // Générer un token unique pour chaque conversation anonyme
+  function generateToken() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+
+  // ── AUTH STATE ──
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
@@ -564,7 +596,6 @@
         currentUsername = snap.data().username;
         window.currentUsername = currentUsername;
         document.getElementById('nav-username').textContent = '@' + currentUsername;
-        const APP_URL = "https://whispr-chi-three.vercel.app";
         document.getElementById('my-link').textContent = `${APP_URL}?u=${currentUsername}`;
         loadMessages();
         showPage('dashboard');
@@ -572,6 +603,7 @@
     }
   });
 
+  // ── REGISTER / LOGIN ──
   window.handleAuth = async function() {
     const isReg = document.getElementById('field-name').style.display !== 'none';
     const email = document.getElementById('input-email').value.trim();
@@ -595,6 +627,7 @@
 
   window.logout = async function() { await signOut(auth); currentUser = null; currentUsername = null; showPage('landing'); };
 
+  // ── CHARGER MESSAGES DASHBOARD ──
   async function loadMessages() {
     if (!currentUser) return;
     const q = query(collection(db, "users", currentUser.uid, "messages"), orderBy("createdAt", "desc"));
@@ -602,7 +635,10 @@
       const list = document.getElementById('message-list');
       const unread = snap.docs.filter(d => !d.data().read).length;
       document.getElementById('msg-count').textContent = unread > 0 ? `${unread} nouveau${unread > 1 ? 'x' : ''}` : `${snap.size}`;
-      if (snap.empty) { list.innerHTML = `<div class="empty-state"><div class="empty-icon">💌</div><p>Aucun message.<br/>Partage ton lien !</p></div>`; return; }
+      if (snap.empty) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-icon">💌</div><p>Aucun message.<br/>Partage ton lien !</p></div>`;
+        return;
+      }
       list.innerHTML = '';
       snap.docs.forEach((d, i) => {
         const data = d.data();
@@ -617,6 +653,7 @@
     });
   }
 
+  // ── OUVRIR CHAT OWNER ──
   window.openChat = async function(msgId, data) {
     currentMessageId = msgId;
     currentConversation = data.conversation || [{ role: 'anon', text: data.content, ts: data.createdAt }];
@@ -638,6 +675,7 @@
     setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
   }
 
+  // ── RÉPONDRE EN TANT QUE OWNER ──
   window.sendReply = async function() {
     const input = document.getElementById('reply-input');
     const text = input.value.trim();
@@ -645,7 +683,9 @@
     currentConversation.push({ role: 'me', text, ts: new Date() });
     input.value = ''; input.style.height = 'auto';
     renderChat();
-    await updateDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId), { conversation: currentConversation, replied: true });
+    await updateDoc(doc(db, "users", currentUser.uid, "messages", currentMessageId), {
+      conversation: currentConversation, replied: true
+    });
   };
 
   window.deleteMessage = async function() {
@@ -654,27 +694,146 @@
     showToast('Supprimé ✓', true); showPage('dashboard');
   };
 
+  // ── ENVOYER MESSAGE ANONYME ──
   window.sendAnonMessage = async function() {
     const text = document.getElementById('anon-message').value.trim();
     const targetUser = document.getElementById('public-name').textContent;
     if (!text) return showToast("Écris un message d'abord !");
+
     try {
       const usersSnap = await getDocs(collection(db, "users"));
       let targetUid = null;
       usersSnap.forEach(d => { if (d.data().username === targetUser) targetUid = d.id; });
       if (!targetUid) return showToast('Utilisateur introuvable');
-      await addDoc(collection(db, "users", targetUid, "messages"), { content: text, conversation: [{ role: 'anon', text, ts: new Date() }], read: false, replied: false, createdAt: serverTimestamp() });
+
+      // Générer un token unique pour cette conversation
+      const token = generateToken();
+
+      const msgRef = await addDoc(collection(db, "users", targetUid, "messages"), {
+        content: text,
+        conversation: [{ role: 'anon', text, ts: new Date() }],
+        read: false, replied: false,
+        token: token, // Token pour accès anonyme
+        exchangeCount: 1, // Compteur échanges
+        createdAt: serverTimestamp()
+      });
+
+      // Afficher le lien de suivi
+      const threadLink = `${APP_URL}?thread=${token}&uid=${targetUid}&mid=${msgRef.id}`;
+      window.currentThreadLink = threadLink;
+      window.currentThreadToken = token;
+      window.currentThreadUid = targetUid;
+      window.currentThreadMid = msgRef.id;
+
+      document.getElementById('thread-link-display').textContent = threadLink;
       document.getElementById('anon-form-wrap').style.display = 'none';
-      document.getElementById('success-msg').style.display = 'block';
+      document.getElementById('sent-success').style.display = 'block';
+
     } catch (e) { showToast('Erreur : ' + e.message); }
   };
 
-  window.resetAnonForm = function() {
-    document.getElementById('anon-message').value = '';
-    document.getElementById('anon-form-wrap').style.display = 'block';
-    document.getElementById('success-msg').style.display = 'none';
+  window.copyThreadLink = function() {
+    navigator.clipboard.writeText(window.currentThreadLink || '').then(() => {
+      showToast('Lien copié ! 💜', true);
+    });
   };
 
+  window.goToConversation = function() {
+    loadConversationByToken(window.currentThreadToken, window.currentThreadUid, window.currentThreadMid);
+  };
+
+  // ── CHARGER CONVERSATION ANONYME ──
+  window.loadConversationByToken = async function(token, uid, mid) {
+    try {
+      const msgSnap = await getDoc(doc(db, "users", uid, "messages", mid));
+      if (!msgSnap.exists()) return showToast('Conversation introuvable');
+
+      const data = msgSnap.data();
+      if (data.token !== token) return showToast('Lien invalide');
+
+      currentThreadToken = token;
+      window.currentThreadToken = token;
+      window.currentThreadUid = uid;
+      window.currentThreadMid = mid;
+      currentThreadData = data;
+
+      renderConversation(data);
+      showPage('conversation');
+
+      // Écouter les mises à jour en temps réel
+      onSnapshot(doc(db, "users", uid, "messages", mid), (snap) => {
+        if (snap.exists()) {
+          currentThreadData = snap.data();
+          renderConversation(snap.data());
+        }
+      });
+
+    } catch (e) { showToast('Erreur : ' + e.message); }
+  };
+
+  function renderConversation(data) {
+    const MAX_EXCHANGES = 3;
+    const exchangeCount = data.exchangeCount || 1;
+    const remaining = MAX_EXCHANGES - Math.floor(exchangeCount / 2);
+
+    // Mettre à jour le compteur
+    const dotsContainer = document.getElementById('exchange-dots');
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < MAX_EXCHANGES; i++) {
+      const dot = document.createElement('div');
+      dot.className = `exchange-dot ${i >= remaining ? 'used' : ''}`;
+      dotsContainer.appendChild(dot);
+    }
+    document.getElementById('exchange-label').textContent =
+      remaining > 0 ? `${remaining} échange${remaining > 1 ? 's' : ''} gratuit${remaining > 1 ? 's' : ''} restant${remaining > 1 ? 's' : ''}` : 'Limite atteinte';
+
+    // Afficher les messages
+    const container = document.getElementById('convo-messages');
+    container.innerHTML = '';
+    const conversation = data.conversation || [];
+    conversation.forEach((msg, i) => {
+      const wrap = document.createElement('div');
+      wrap.style.display = 'flex'; wrap.style.animationDelay = `${i * 0.06}s`; wrap.className = 'fadein';
+      // Ici "anon" = moi (l'anonyme), "me" = le propriétaire
+      const isMe = msg.role === 'anon';
+      wrap.innerHTML = `<div class="chat-bubble ${isMe ? 'bubble-me' : 'bubble-anon'}">${escapeHtml(msg.text)}<div class="bubble-time">${msg.ts?.toDate ? timeAgo(msg.ts.toDate()) : 'maintenant'}</div></div>`;
+      container.appendChild(wrap);
+    });
+    setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
+
+    // Afficher ou masquer l'input et le paywall
+    const inputBar = document.getElementById('convo-input-bar');
+    const paywall = document.getElementById('paywall');
+    if (remaining <= 0) {
+      inputBar.style.display = 'none';
+      paywall.classList.add('show');
+    } else {
+      inputBar.style.display = 'flex';
+      paywall.classList.remove('show');
+    }
+  }
+
+  // ── RÉPONDRE EN TANT QU'ANONYME ──
+  window.sendAnonReply = async function() {
+    const input = document.getElementById('convo-reply-input');
+    const text = input.value.trim();
+    if (!text || !window.currentThreadUid || !window.currentThreadMid) return;
+
+    const data = currentThreadData;
+    const MAX_EXCHANGES = 3;
+    const exchangeCount = (data.exchangeCount || 1);
+    if (Math.floor(exchangeCount / 2) >= MAX_EXCHANGES) return;
+
+    const updatedConversation = [...(data.conversation || []), { role: 'anon', text, ts: new Date() }];
+    input.value = ''; input.style.height = 'auto';
+
+    await updateDoc(doc(db, "users", window.currentThreadUid, "messages", window.currentThreadMid), {
+      conversation: updatedConversation,
+      exchangeCount: exchangeCount + 1
+    });
+  };
+
+  // ── COPY LINK ──
   window.copyLink = function() {
     const link = document.getElementById('my-link').textContent;
     navigator.clipboard.writeText(link).then(() => {
@@ -682,19 +841,45 @@
       btn.textContent = '✓ Copié'; btn.classList.add('copied');
       setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2000);
     }).catch(() => {
-      // Fallback si clipboard non disponible (ex: HTTP)
       const el = document.createElement('textarea');
-      el.value = link;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
+      el.value = link; document.body.appendChild(el); el.select();
+      document.execCommand('copy'); document.body.removeChild(el);
       const btn = document.getElementById('copy-btn');
       btn.textContent = '✓ Copié'; btn.classList.add('copied');
       setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2000);
     });
   };
 
+  // ── PARTAGE ──
+  window.shareWhatsApp = function() {
+    const link = document.getElementById('my-link').textContent;
+    window.open(`https://wa.me/?text=Envoie-moi un message anonyme 👻 ${encodeURIComponent(link)}`);
+  };
+  window.shareTelegram = function() {
+    const link = document.getElementById('my-link').textContent;
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Envoie-moi un message anonyme 👻`);
+  };
+  window.shareNative = function() {
+    const link = document.getElementById('my-link').textContent;
+    if (navigator.share) {
+      navigator.share({ title: 'Whispr', text: 'Envoie-moi un message anonyme 👻', url: link });
+    } else { copyLink(); }
+  };
+
+  // ── DOWNLOAD APP ──
+  window.downloadApp = function() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) downloadIOS(); else downloadAndroid();
+  };
+  window.downloadAndroid = function() {
+    // Remplace par ton lien Play Store quand disponible
+    showToast('App bientôt sur Play Store !');
+  };
+  window.downloadIOS = function() {
+    showToast('App bientôt sur App Store !');
+  };
+
+  // ── HELPERS ──
   function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
   function timeAgo(date) {
     const diff = (Date.now() - date.getTime()) / 1000;
@@ -709,16 +894,26 @@
     setTimeout(() => t.className = 'toast', 2800);
   }
   window.showToast = showToast;
+  window.db = db;
+  window.loadConversationByToken = window.loadConversationByToken;
 </script>
 
 <script>
   let authMode = 'register';
 
-  // ── Détection du lien anonyme au chargement ──
+  // ── Détection URL au chargement ──
   (function checkUrlParams() {
     const params = new URLSearchParams(window.location.search);
     const u = params.get('u');
-    if (u) {
+    const thread = params.get('thread');
+    const uid = params.get('uid');
+    const mid = params.get('mid');
+
+    if (thread && uid && mid) {
+      // Lien de suivi conversation anonyme
+      setTimeout(() => window.loadConversationByToken && window.loadConversationByToken(thread, uid, mid), 500);
+    } else if (u) {
+      // Lien profil public
       document.getElementById('public-name').textContent = u;
       document.getElementById('public-avatar').textContent = u.charAt(0).toUpperCase();
       showPage('public');
