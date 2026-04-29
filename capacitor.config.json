@@ -1,15 +1,27 @@
 {
-  "appId": "com.whispr.app",
-  "appName": "Whispr",
+  "appId": "com.nga.app",
+  "appName": "NGA",
   "webDir": "www",
   "bundledWebRuntime": false,
   "android": {
-    "buildOptions": {
-      "keystorePath": null,
-      "keystoreAlias": null
-    }
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
   },
   "server": {
-    "androidScheme": "https"
+    "androidScheme": "https",
+    "allowNavigation": [
+      "wa.me",
+      "*.wa.me",
+      "t.me",
+      "*.t.me",
+      "whispr-chi-three.vercel.app",
+      "ip-api.com"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
   }
 }
