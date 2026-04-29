@@ -5,223 +5,244 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
   <title>NGA</title>
   <link rel="manifest" href="/manifest.json"/>
-  <meta name="theme-color" content="#7c5cfc"/>
+  <meta name="theme-color" content="#ffffff"/>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/0jJ5yVSL/1777374660574.png"/>
   <link rel="apple-touch-icon" href="https://i.postimg.cc/0jJ5yVSL/1777374660574.png"/>
-  <meta name="apple-mobile-web-app-title" content="NGA"/>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --grad: linear-gradient(160deg, #7c5cfc 0%, #c084fc 100%);
-      --dark: #0a0a0f;
-      --dark2: #12121a;
-      --dark3: #1a1a26;
-      --border: #ffffff12;
-      --text: #ffffff;
-      --muted: #7777aa;
-      --accent: #7c5cfc;
-      --accent2: #c084fc;
-      --success: #4fefaa;
+      --red: #ff3b5c;
+      --red2: #ff6b35;
+      --grad: linear-gradient(135deg, #ff3b5c, #ff6b35);
+      --dark: #111111;
+      --bg: #f7f7f7;
+      --card: #ffffff;
+      --border: #ebebeb;
+      --text: #111111;
+      --muted: #999999;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     html, body {
       font-family:'Inter', sans-serif;
-      background:var(--dark); color:var(--text);
+      background:var(--bg); color:var(--text);
       height:100%; width:100%; overflow:hidden; position:fixed;
     }
-    .page {
-      display:none; flex-direction:column;
-      height:100%; width:100%;
-      position:fixed; top:0; left:0; z-index:1; overflow:hidden;
-    }
+    .page { display:none; flex-direction:column; height:100%; width:100%; position:fixed; top:0; left:0; z-index:1; overflow:hidden; background:var(--bg); }
     .page.active { display:flex; }
     .scroll-area { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
-    .toast {
-      position:fixed; bottom:calc(var(--safe-bottom) + 24px);
-      left:50%; transform:translateX(-50%) translateY(80px);
-      background:#1f2937; border:1px solid #ffffff20;
-      border-radius:14px; padding:12px 22px; font-size:14px;
-      color:#fff; z-index:9999; transition:transform 0.3s ease;
-      white-space:nowrap; pointer-events:none;
-    }
-    .toast.show { transform:translateX(-50%) translateY(0); }
-    .toast.ok { border-color:#10b98140; color:#10b981; }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-    .fadein { animation:fadeUp 0.35s ease both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .fadein { animation:fadeUp 0.3s ease both; }
     ::-webkit-scrollbar { width:0; }
 
-    /* ── SPLASH ── */
-    #page-splash { background:var(--grad); align-items:center; justify-content:space-between; padding-top:calc(var(--safe-top) + 60px); padding-bottom:calc(var(--safe-bottom) + 40px); }
-    .splash-logo { width:220px; height:220px; object-fit:contain; filter:drop-shadow(0 8px 32px rgba(0,0,0,0.4)); }
-    .splash-bottom { width:100%; padding:0 24px; }
-    .splash-btn { width:100%; padding:18px; background:white; color:#111; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:18px; font-weight:800; cursor:pointer; transition:transform 0.1s; }
-    .splash-btn:active { transform:scale(0.97); }
-    .splash-terms { text-align:center; margin-top:16px; font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; }
-    .splash-terms a { color:white; text-decoration:underline; }
+    /* ── TOAST ── */
+    .toast { position:fixed; bottom:calc(var(--safe-bottom) + 24px); left:50%; transform:translateX(-50%) translateY(80px); background:#222; border-radius:14px; padding:12px 22px; font-size:14px; color:#fff; z-index:9999; transition:transform 0.3s ease; white-space:nowrap; pointer-events:none; }
+    .toast.show { transform:translateX(-50%) translateY(0); }
+    .toast.ok { background:#22c55e; }
 
-    /* ── ONBOARD ── */
-    .onboard-header { display:flex; align-items:center; padding:calc(var(--safe-top) + 16px) 20px 16px; gap:16px; }
-    .back-circle { width:38px; height:38px; background:var(--dark2); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; color:white; border:none; flex-shrink:0; }
-    .back-circle:active { background:var(--dark3); }
-    .onboard-title { font-family:'Nunito',sans-serif; font-size:32px; font-weight:900; text-align:center; line-height:1.15; padding:0 24px 32px; }
-    .onboard-continue { position:fixed; bottom:0; left:0; right:0; padding:16px 24px; padding-bottom:calc(var(--safe-bottom) + 16px); background:var(--dark); z-index:9998; }
-    .continue-btn { width:100%; padding:18px; background:white; color:#111; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:18px; font-weight:800; cursor:pointer; transition:transform 0.1s; }
-    .continue-btn:active { transform:scale(0.97); }
-    .continue-btn.grad { background:var(--grad); color:white; }
+    /* ══ SPLASH ══ */
+    #page-splash { background:white; align-items:center; justify-content:space-between; padding-top:calc(var(--safe-top) + 80px); padding-bottom:calc(var(--safe-bottom) + 48px); }
+    .splash-logo-wrap { display:flex; flex-direction:column; align-items:center; gap:20px; }
+    .splash-logo { width:100px; height:100px; border-radius:28px; object-fit:contain; box-shadow:0 8px 32px rgba(255,59,92,0.25); }
+    .splash-appname { font-family:'Nunito',sans-serif; font-size:36px; font-weight:900; letter-spacing:-1px; }
+    .splash-tagline { font-size:16px; color:var(--muted); text-align:center; line-height:1.5; max-width:260px; }
+    .splash-bottom { width:100%; padding:0 24px; display:flex; flex-direction:column; gap:12px; }
+    .btn-red { width:100%; padding:18px; background:var(--grad); color:white; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; cursor:pointer; transition:transform 0.1s; }
+    .btn-red:active { transform:scale(0.97); }
+    .btn-outline { width:100%; padding:16px; background:white; color:var(--dark); border:2px solid var(--border); border-radius:100px; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; cursor:pointer; }
+    .splash-terms { text-align:center; font-size:12px; color:var(--muted); line-height:1.5; }
+    .splash-terms a { color:var(--red); }
 
-    /* ── PLATFORM ── */
-    .platform-list { padding:0 24px; display:flex; flex-direction:column; gap:12px; }
-    .platform-btn { display:flex; align-items:center; gap:14px; background:var(--dark2); border:2px solid transparent; border-radius:16px; padding:16px 18px; cursor:pointer; transition:all 0.15s; -webkit-user-select:none; }
-    .platform-btn.selected { border-color:white; }
-    .platform-btn:active { background:var(--dark3); }
-    .platform-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; }
-    .platform-name { font-size:17px; font-weight:600; flex:1; }
-    .platform-check { width:24px; height:24px; border-radius:50%; background:var(--dark3); border:2px solid var(--dark3); transition:all 0.15s; }
-    .platform-btn.selected .platform-check { background:white; border-color:white; }
+    /* ══ PLATFORM ══ */
+    #page-platform { background:white; }
+    .page-header { display:flex; align-items:center; padding:calc(var(--safe-top) + 14px) 20px 14px; gap:12px; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:var(--bg); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; color:var(--dark); }
+    .page-title { font-family:'Nunito',sans-serif; font-size:18px; font-weight:900; flex:1; text-align:center; }
+    .page-spacer { width:36px; }
+    .big-title { font-family:'Nunito',sans-serif; font-size:28px; font-weight:900; text-align:center; line-height:1.2; padding:28px 24px 20px; }
+    .platform-list { padding:0 20px; display:flex; flex-direction:column; gap:10px; }
+    .platform-item { display:flex; align-items:center; gap:14px; background:var(--bg); border:2px solid transparent; border-radius:16px; padding:14px 16px; cursor:pointer; transition:all 0.15s; }
+    .platform-item.selected { border-color:var(--dark); background:white; }
+    .platform-icon { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; }
+    .platform-name { font-size:16px; font-weight:600; flex:1; }
+    .platform-radio { width:22px; height:22px; border-radius:50%; border:2px solid #ddd; transition:all 0.15s; display:flex; align-items:center; justify-content:center; }
+    .platform-item.selected .platform-radio { border-color:var(--dark); background:var(--dark); }
+    .platform-item.selected .platform-radio::after { content:''; width:8px; height:8px; border-radius:50%; background:white; }
+    .bottom-bar { position:fixed; bottom:0; left:0; right:0; padding:12px 20px; padding-bottom:calc(var(--safe-bottom) + 12px); background:white; border-top:1px solid var(--border); z-index:100; }
 
-    /* ── USERNAME ── */
-    .username-input-wrap { background:var(--dark2); border-radius:16px; padding:18px 20px; margin-bottom:24px; }
-    .username-input-wrap input { background:transparent; border:none; color:white; font-size:20px; font-weight:600; font-family:'Nunito',sans-serif; width:100%; outline:none; text-align:center; }
-    .username-input-wrap input::placeholder { color:var(--muted); }
+    /* ══ USERNAME ══ */
+    #page-username-setup { background:white; }
+    .username-field { margin:0 20px; background:var(--bg); border-radius:16px; padding:18px 20px; display:flex; align-items:center; gap:12px; }
+    .username-at { font-size:22px; font-weight:700; color:var(--muted); }
+    .username-field input { background:transparent; border:none; color:var(--dark); font-size:20px; font-weight:700; font-family:'Nunito',sans-serif; flex:1; outline:none; }
+    .username-field input::placeholder { color:#ccc; }
 
-    /* ── PHOTO ── */
-    .photo-area { flex:1; display:flex; align-items:center; justify-content:center; }
-    .photo-circle { width:160px; height:160px; border-radius:50%; background:var(--dark3); display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; overflow:hidden; }
-    .photo-circle img { width:100%; height:100%; object-fit:cover; display:none; }
-    .photo-placeholder { font-size:70px; opacity:0.4; }
-    .photo-plus { position:absolute; bottom:8px; right:8px; width:36px; height:36px; border-radius:50%; background:white; color:#111; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; }
+    /* ══ AUTH ══ */
+    #page-auth { background:white; }
+    #page-auth .scroll-area { padding:0 20px; }
+    .auth-field { background:var(--bg); border:2px solid transparent; border-radius:14px; padding:16px 18px; width:100%; font-size:16px; font-family:'Inter',sans-serif; color:var(--dark); outline:none; margin-bottom:10px; -webkit-appearance:none; }
+    .auth-field:focus { border-color:#ddd; }
+    .auth-field::placeholder { color:#bbb; }
+    .or-divider { text-align:center; color:var(--muted); font-size:13px; margin:14px 0; position:relative; }
+    .or-divider::before, .or-divider::after { content:''; position:absolute; top:50%; width:42%; height:1px; background:var(--border); }
+    .or-divider::before { left:0; } .or-divider::after { right:0; }
+    .google-btn { width:100%; padding:15px; border-radius:14px; border:2px solid var(--border); background:white; color:var(--dark); font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px; }
+    .auth-switch { text-align:center; font-size:14px; color:var(--muted); margin-top:16px; }
+    .auth-switch a { color:var(--red); cursor:pointer; font-weight:600; }
 
-    /* ── AUTH ── */
-    #page-auth .scroll-area { padding:0 24px; }
-    .auth-input { background:var(--dark2); border:none; border-radius:16px; color:white; font-size:16px; padding:18px 20px; width:100%; outline:none; margin-bottom:12px; font-family:'Inter',sans-serif; -webkit-appearance:none; }
-    .auth-input::placeholder { color:var(--muted); }
-    .auth-input:focus { outline:2px solid var(--accent); }
+    /* ══ MAIN ══ */
+    #page-main { background:var(--bg); }
+    .main-header { display:flex; align-items:center; justify-content:space-between; padding:calc(var(--safe-top) + 12px) 20px 12px; background:white; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .tab-group { display:flex; gap:4px; }
+    .main-tab { padding:8px 18px; border-radius:100px; border:none; background:transparent; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; color:var(--muted); cursor:pointer; position:relative; transition:color 0.2s; }
+    .main-tab.active { color:var(--dark); }
+    .tab-dot { width:7px; height:7px; border-radius:50%; background:var(--red); position:absolute; top:6px; right:10px; display:none; }
+    .tab-dot.show { display:block; }
+    .settings-btn { width:38px; height:38px; border-radius:50%; background:var(--bg); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; }
 
-    /* ── MAIN TABS ── */
-    .tab-bar { display:flex; align-items:center; padding:calc(var(--safe-top) + 12px) 20px 12px; border-bottom:1px solid var(--border); background:var(--dark); flex-shrink:0; gap:4px; }
-    .tab-btn { flex:1; padding:10px; background:transparent; border:none; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; color:var(--muted); cursor:pointer; letter-spacing:0.5px; position:relative; transition:color 0.2s; }
-    .tab-btn.active { color:white; }
-    .tab-notif { width:8px; height:8px; border-radius:50%; background:var(--accent); position:absolute; top:8px; right:calc(50% - 20px); display:none; }
-    .tab-notif.show { display:block; }
-    .tab-settings { width:40px; height:40px; border-radius:50%; background:var(--dark2); border:none; color:white; font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
-    .tab-content { display:none; flex:1; overflow:hidden; }
-    .tab-content.active { display:flex; flex-direction:column; }
+    .tab-content { display:none; flex:1; overflow:hidden; flex-direction:column; }
+    .tab-content.active { display:flex; }
+
+    /* ── PLAY TAB ── */
     #tab-play .scroll-area { padding:20px; }
+    .story-card { border-radius:20px; overflow:hidden; margin-bottom:16px; position:relative; }
+    .story-card-top { background:var(--grad); padding:28px 24px; text-align:center; }
+    .story-avatar { width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,0.2); border:2.5px solid rgba(255,255,255,0.5); margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Nunito',sans-serif; font-size:26px; font-weight:900; color:white; overflow:hidden; cursor:pointer; position:relative; }
+    .story-avatar img { width:100%; height:100%; object-fit:cover; display:none; }
+    .story-text { font-family:'Nunito',sans-serif; font-size:22px; font-weight:900; color:white; line-height:1.2; }
+    .story-card-bottom { background:white; padding:16px; }
+    .story-link { font-size:13px; color:var(--muted); text-align:center; margin-bottom:12px; word-break:break-all; font-weight:500; }
+    .copy-btn-outline { width:100%; padding:13px; border:2px solid var(--dark); border-radius:100px; background:white; color:var(--dark); font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.15s; }
+    .copy-btn-outline.copied { background:var(--dark); color:white; }
+    .share-row { display:flex; gap:10px; margin-top:10px; }
+    .share-pill { flex:1; padding:12px; border:none; border-radius:12px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:700; cursor:pointer; }
+    .share-wa { background:#25d366; color:white; }
+    .share-tg { background:#229ed9; color:white; }
+    .share-more { background:var(--bg); color:var(--dark); }
+    .dice-row { display:flex; justify-content:center; margin-top:10px; }
+    .dice-btn { background:var(--bg); border:none; border-radius:100px; padding:10px 20px; font-size:14px; font-weight:600; cursor:pointer; color:var(--muted); }
 
-    /* ── SHARE CARD ── */
-    .share-card { border-radius:20px; overflow:hidden; background:var(--dark2); margin-bottom:20px; position:relative; }
-    .share-card-bg { height:220px; background:linear-gradient(160deg, #2d1b4e 0%, #3d2020 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; position:relative; }
-    .share-card-avatar { width:72px; height:72px; border-radius:50%; background:var(--dark3); border:3px solid rgba(255,255,255,0.3); overflow:hidden; margin-bottom:14px; display:flex; align-items:center; justify-content:center; font-size:28px; position:relative; cursor:pointer; }
-    .share-card-avatar img { width:100%; height:100%; object-fit:cover; display:none; }
-    .edit-avatar-btn { position:absolute; bottom:0; right:0; width:24px; height:24px; border-radius:50%; background:white; color:#111; display:flex; align-items:center; justify-content:center; font-size:13px; }
-    .share-card-text { font-family:'Nunito',sans-serif; font-size:22px; font-weight:900; color:white; line-height:1.2; }
-    .dice-btn { position:absolute; bottom:14px; right:14px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.15); border:none; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-    .step-card { background:var(--dark2); border-radius:16px; padding:20px; margin-bottom:12px; }
-    .step-title { font-family:'Nunito',sans-serif; font-size:17px; font-weight:800; margin-bottom:10px; text-align:center; }
-    .step-link { font-size:14px; font-weight:700; color:var(--muted); text-align:center; margin-bottom:14px; word-break:break-all; letter-spacing:0.5px; }
-    .copy-link-btn { width:100%; padding:14px; background:transparent; border:2px solid var(--accent); border-radius:100px; color:var(--accent); font-size:15px; font-family:'Nunito',sans-serif; font-weight:800; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
-    .copy-link-btn:active { background:var(--accent)20; }
-    .copy-link-btn.copied { background:var(--accent); color:white; }
-    .share-big-btn { width:100%; padding:18px; background:var(--grad); color:white; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:18px; font-weight:900; cursor:pointer; transition:transform 0.1s; }
-    .share-big-btn:active { transform:scale(0.97); }
+    /* ── INBOX TAB ── */
+    #tab-inbox .scroll-area { padding-bottom:calc(var(--safe-bottom) + 80px); }
+    .inbox-list { display:flex; flex-direction:column; }
+    .inbox-item { display:flex; align-items:center; gap:14px; padding:14px 20px; background:white; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; }
+    .inbox-item:active { background:#f9f9f9; }
+    .msg-icon-wrap { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .msg-icon-wrap.unread { background:var(--grad); }
+    .msg-icon-wrap.read { background:#f0f0f0; }
+    .msg-icon { font-size:24px; }
+    .inbox-content { flex:1; min-width:0; }
+    .inbox-title { font-family:'Nunito',sans-serif; font-size:16px; font-weight:900; margin-bottom:3px; }
+    .inbox-title.unread { color:var(--red); }
+    .inbox-title.read { color:var(--muted); }
+    .inbox-preview { font-size:14px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .inbox-time { font-size:12px; color:var(--muted); white-space:nowrap; }
+    .inbox-arrow { color:#ccc; font-size:18px; }
+    .inbox-empty-wrap { padding:60px 24px; text-align:center; }
+    .inbox-empty-icon { font-size:56px; margin-bottom:16px; opacity:0.4; }
+    .inbox-empty-title { font-family:'Nunito',sans-serif; font-size:22px; font-weight:900; margin-bottom:8px; }
+    .inbox-empty-sub { color:var(--muted); font-size:15px; line-height:1.6; }
 
-    /* ── INBOX ── */
-    #tab-inbox .scroll-area { padding:20px; }
-    .inbox-empty { text-align:center; padding:32px 20px; }
-    .inbox-empty-title { font-family:'Nunito',sans-serif; font-size:26px; font-weight:900; color:var(--accent); margin-bottom:10px; }
-    .inbox-empty-sub { color:var(--muted); font-size:15px; line-height:1.5; margin-bottom:28px; }
-    .placeholder-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:28px; }
-    .placeholder-cell { aspect-ratio:1; border-radius:16px; background:var(--dark2); opacity:0.5; }
-    .placeholder-cell:nth-child(n+10) { opacity:0.2; }
-    .inbox-cta-btn { width:100%; padding:18px; background:#111; color:white; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:18px; font-weight:900; cursor:pointer; }
-    .inbox-list { display:flex; flex-direction:column; gap:12px; }
-    .inbox-item { background:var(--dark2); border-radius:16px; padding:16px 18px; cursor:pointer; border-left:3px solid transparent; transition:background 0.15s; }
-    .inbox-item:active { background:var(--dark3); }
-    .inbox-item.unread { border-left-color:var(--accent); }
-    .inbox-preview { font-size:15px; line-height:1.4; margin-bottom:8px; }
-    .inbox-meta { display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--muted); }
-    .inbox-tag { background:var(--dark3); border-radius:100px; padding:3px 10px; font-size:11px; }
-    .inbox-tag.replied { background:#10b98120; color:#10b981; }
+    /* Bouton rouge fixe en bas de l'inbox */
+    .who-sent-bar { position:fixed; bottom:0; left:0; right:0; padding:12px 20px; padding-bottom:calc(var(--safe-bottom) + 12px); background:white; border-top:1px solid var(--border); z-index:100; }
+    .who-sent-btn { width:100%; padding:17px; background:var(--grad); color:white; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
 
-    /* ── SETTINGS ── */
-    .settings-list { padding:20px; display:flex; flex-direction:column; gap:10px; }
-    .settings-item { background:var(--dark2); border-radius:16px; padding:16px 18px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
-    .settings-item:active { background:var(--dark3); }
-    .settings-label { font-size:16px; font-weight:600; }
-    .settings-icon { font-size:20px; }
-    .logout-btn { width:100%; padding:16px; background:transparent; border:2px solid #ff4f6a40; border-radius:16px; color:#ff4f6a; font-size:16px; font-family:'Inter',sans-serif; font-weight:600; cursor:pointer; margin-top:8px; }
+    /* ══ SETTINGS ══ */
+    #page-settings { background:var(--bg); }
+    .settings-section { padding:8px 20px 4px; font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+    .settings-card { margin:0 16px 12px; background:white; border-radius:16px; overflow:hidden; }
+    .settings-row { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--border); cursor:pointer; }
+    .settings-row:last-child { border-bottom:none; }
+    .settings-row:active { background:#f9f9f9; }
+    .settings-row-left { display:flex; align-items:center; gap:12px; }
+    .settings-row-icon { width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .settings-row-label { font-size:15px; font-weight:500; }
+    .settings-row-arrow { color:#ccc; font-size:16px; }
+    .logout-card { margin:0 16px 24px; background:white; border-radius:16px; overflow:hidden; }
+    .logout-row { padding:16px 18px; text-align:center; color:var(--red); font-size:16px; font-weight:600; cursor:pointer; }
 
-    /* ── CHAT ── */
-    #page-chat { background:var(--dark); }
-    .chat-topbar { display:flex; align-items:center; padding:calc(var(--safe-top) + 12px) 16px 12px; border-bottom:1px solid var(--border); gap:12px; flex-shrink:0; }
-    .chat-info { flex:1; }
-    .chat-info h3 { font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; }
-    .chat-info span { font-size:12px; color:var(--muted); }
-    .del-btn { background:transparent; border:1px solid #ff4f6a40; border-radius:10px; color:#ff4f6a; font-size:13px; font-family:'Inter',sans-serif; padding:7px 12px; cursor:pointer; }
-    #page-chat .scroll-area { padding:16px; display:flex; flex-direction:column; gap:14px; }
-    .bubble { max-width:82%; padding:14px 18px; border-radius:20px; font-size:15px; line-height:1.5; }
-    .bubble-anon { background:var(--dark2); border:1px solid var(--border); border-bottom-left-radius:6px; align-self:flex-start; }
-    .bubble-me { background:var(--grad); color:white; border-bottom-right-radius:6px; align-self:flex-end; }
-    .bubble-time { font-size:11px; color:var(--muted); margin-top:5px; }
-    .bubble-me .bubble-time { color:rgba(255,255,255,0.55); text-align:right; }
-    .chat-input-bar { padding:10px 14px; padding-bottom:calc(var(--safe-bottom) + 10px); border-top:1px solid var(--border); background:var(--dark); display:flex; gap:10px; align-items:flex-end; flex-shrink:0; }
-    .chat-input-bar textarea { background:var(--dark2); border:1px solid var(--border); border-radius:20px; color:white; font-family:'Inter',sans-serif; font-size:16px; padding:12px 16px; flex:1; outline:none; resize:none; max-height:100px; -webkit-appearance:none; }
-    .send-btn { background:var(--grad); border:none; border-radius:50%; color:white; width:44px; height:44px; min-width:44px; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:transform 0.1s; }
-    .send-btn:active { transform:scale(0.92); }
+    /* ══ CHAT (owner) ══ */
+    #page-chat { background:var(--bg); }
+    .chat-header { display:flex; align-items:center; padding:calc(var(--safe-top) + 12px) 16px 12px; background:white; border-bottom:1px solid var(--border); gap:12px; flex-shrink:0; }
+    .chat-header-info { flex:1; }
+    .chat-header-title { font-family:'Nunito',sans-serif; font-size:16px; font-weight:900; }
+    .chat-header-sub { font-size:12px; color:var(--muted); }
+    .chat-del-btn { padding:8px 14px; border-radius:100px; border:1.5px solid #ffcdd2; background:white; color:var(--red); font-size:13px; font-weight:600; cursor:pointer; }
+    #page-chat .scroll-area { padding:16px; display:flex; flex-direction:column; gap:10px; }
+    .bubble { max-width:80%; padding:13px 16px; border-radius:20px; font-size:15px; line-height:1.5; }
+    .bubble-anon { background:white; border:1px solid var(--border); border-bottom-left-radius:6px; align-self:flex-start; color:var(--dark); }
+    .bubble-me { background:var(--dark); color:white; border-bottom-right-radius:6px; align-self:flex-end; }
+    .bubble-time { font-size:11px; margin-top:5px; }
+    .bubble-anon .bubble-time { color:var(--muted); }
+    .bubble-me .bubble-time { color:rgba(255,255,255,0.5); text-align:right; }
+    .hints-bar { display:none; align-items:center; gap:8px; padding:10px 16px; background:#fff8f8; border-bottom:1px solid #ffe0e0; flex-shrink:0; cursor:pointer; }
+    .hint-chip { background:white; border:1px solid var(--border); border-radius:100px; padding:4px 12px; font-size:12px; color:var(--dark); }
+    .hint-locked { filter:blur(4px); user-select:none; }
+    .chat-input-wrap { padding:10px 14px; padding-bottom:calc(var(--safe-bottom) + 10px); background:white; border-top:1px solid var(--border); display:flex; gap:10px; align-items:flex-end; flex-shrink:0; }
+    .chat-textarea { flex:1; background:var(--bg); border:none; border-radius:20px; color:var(--dark); font-family:'Inter',sans-serif; font-size:16px; padding:12px 16px; outline:none; resize:none; max-height:100px; }
+    .chat-send-btn { width:42px; height:42px; min-width:42px; border-radius:50%; background:var(--grad); border:none; color:white; font-size:16px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+    .chat-send-btn:active { transform:scale(0.93); }
 
-    /* ── PUBLIC ── */
-    #page-public { background:var(--dark); }
-    .public-topbar { display:flex; align-items:center; justify-content:flex-end; padding:calc(var(--safe-top) + 12px) 20px 12px; flex-shrink:0; }
-    .public-get-btn { background:var(--grad); border:none; border-radius:100px; color:white; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; padding:10px 18px; cursor:pointer; }
-    #page-public .scroll-area { padding:20px; }
-    .public-card { border-radius:20px; overflow:hidden; background:linear-gradient(160deg, #2d1b4e 0%, #3d2020 100%); padding:36px 24px; text-align:center; margin-bottom:28px; }
-    .public-avatar { width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.15); border:3px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-family:'Nunito',sans-serif; font-size:32px; font-weight:900; margin:0 auto 16px; animation:pulse 2s ease-in-out infinite; }
-    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,45,120,0.3)} 50%{box-shadow:0 0 0 12px rgba(255,45,120,0)} }
-    .public-card-text { font-family:'Nunito',sans-serif; font-size:24px; font-weight:900; line-height:1.2; }
-    .anon-textarea { width:100%; background:var(--dark2); border:2px solid var(--border); border-radius:16px; color:white; font-size:16px; font-family:'Inter',sans-serif; padding:16px; outline:none; resize:none; min-height:130px; margin-bottom:14px; -webkit-appearance:none; transition:border-color 0.2s; }
-    .anon-textarea:focus { border-color:var(--accent); }
-    .anon-hint { display:flex; align-items:center; gap:8px; background:var(--dark2); border-radius:12px; padding:12px 14px; font-size:13px; color:var(--muted); margin-bottom:16px; }
-    .send-anon-btn { width:100%; padding:18px; background:var(--grad); color:white; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; cursor:pointer; transition:transform 0.1s; }
-    .send-anon-btn:active { transform:scale(0.97); }
-    .anon-counter { text-align:center; font-size:13px; color:var(--muted); margin-bottom:12px; padding:8px 16px; background:var(--dark2); border-radius:10px; }
-    .anon-counter span { color:var(--accent2); font-weight:600; }
-    #sent-success { display:none; text-align:center; padding:8px 0 24px; }
-    .sent-icon { font-size:56px; margin-bottom:14px; }
-    .sent-title { font-family:'Nunito',sans-serif; font-size:24px; font-weight:900; margin-bottom:8px; }
-    .sent-sub { color:var(--muted); font-size:14px; line-height:1.5; margin-bottom:24px; }
-    .thread-link-box { background:var(--dark2); border:1px solid var(--border); border-radius:14px; padding:14px; margin-bottom:16px; }
-    .thread-link-box .tl-label { font-size:12px; color:var(--muted); margin-bottom:6px; }
-    .thread-link-box .tl-url { font-size:13px; word-break:break-all; }
+    /* ══ PUBLIC ══ */
+    #page-public { background:white; }
+    .public-header { display:flex; align-items:center; justify-content:flex-end; padding:calc(var(--safe-top) + 12px) 16px 12px; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .get-app-btn { padding:9px 18px; border-radius:100px; background:var(--grad); color:white; border:none; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; cursor:pointer; }
+    #page-public .scroll-area { padding:0 0 calc(var(--safe-bottom) + 24px); }
+    .public-hero { background:var(--grad); padding:36px 24px 28px; text-align:center; }
+    .public-hero-avatar { width:72px; height:72px; border-radius:50%; background:rgba(255,255,255,0.25); border:3px solid rgba(255,255,255,0.5); margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Nunito',sans-serif; font-size:28px; font-weight:900; color:white; animation:pulse 2s ease-in-out infinite; }
+    .public-hero-text { font-family:'Nunito',sans-serif; font-size:22px; font-weight:900; color:white; line-height:1.2; }
+    .public-form { padding:24px 20px; }
+    .anon-hint-box { display:flex; align-items:center; gap:8px; background:var(--bg); border-radius:12px; padding:11px 14px; font-size:13px; color:var(--muted); margin-bottom:14px; }
+    .anon-counter-box { text-align:center; font-size:13px; color:var(--muted); margin-bottom:12px; padding:8px; background:#fff8f0; border-radius:10px; border:1px solid #ffe0c0; }
+    .anon-counter-box b { color:var(--red); }
+    .public-textarea { width:100%; background:var(--bg); border:2px solid var(--border); border-radius:16px; color:var(--dark); font-size:16px; font-family:'Inter',sans-serif; padding:16px; outline:none; resize:none; min-height:120px; transition:border-color 0.2s; }
+    .public-textarea:focus { border-color:#ddd; }
+    .send-btn-red { width:100%; padding:17px; background:var(--grad); color:white; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:17px; font-weight:900; cursor:pointer; margin-top:12px; }
+    .send-btn-red:active { transform:scale(0.98); }
+    .sent-success { display:none; padding:28px 20px; text-align:center; }
+    .sent-emoji { font-size:56px; margin-bottom:14px; }
+    .sent-title { font-family:'Nunito',sans-serif; font-size:22px; font-weight:900; margin-bottom:8px; }
+    .sent-sub { color:var(--muted); font-size:14px; line-height:1.5; margin-bottom:20px; }
+    .thread-box { background:var(--bg); border-radius:14px; padding:14px 16px; margin-bottom:14px; text-align:left; }
+    .thread-box-label { font-size:12px; color:var(--muted); margin-bottom:6px; }
+    .thread-box-url { font-size:13px; color:var(--dark); word-break:break-all; font-weight:500; }
 
-    /* ── CONVERSATION ANONYME ── */
-    #page-conversation { background:var(--dark); }
-    .convo-topbar { display:flex; align-items:center; justify-content:space-between; padding:calc(var(--safe-top) + 12px) 20px 12px; border-bottom:1px solid var(--border); flex-shrink:0; }
-    .download-app-btn { background:var(--grad); border:none; border-radius:100px; color:white; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; padding:9px 16px; cursor:pointer; }
-    .exchange-bar { display:flex; align-items:center; justify-content:space-between; padding:10px 20px; background:var(--dark2); border-bottom:1px solid var(--border); flex-shrink:0; }
-    .exchange-bar span { font-size:13px; color:var(--muted); }
-    .exchange-dots { display:flex; gap:6px; }
-    .xdot { width:10px; height:10px; border-radius:50%; background:var(--accent); transition:background 0.3s; }
-    .xdot.used { background:var(--dark3); }
-    #page-conversation .scroll-area { padding:16px; display:flex; flex-direction:column; gap:14px; }
-    .paywall { display:none; margin:16px; background:linear-gradient(135deg, #7c5cfc20, #c084fc10); border:1px solid var(--accent)40; border-radius:20px; padding:28px 22px; text-align:center; flex-shrink:0; }
-    .paywall.show { display:block; }
-    .paywall-icon { font-size:48px; margin-bottom:14px; }
-    .paywall h3 { font-family:'Nunito',sans-serif; font-size:22px; font-weight:900; margin-bottom:8px; }
-    .paywall p { color:var(--muted); font-size:14px; line-height:1.5; margin-bottom:20px; }
-    .store-btn { width:100%; padding:16px; border:none; border-radius:100px; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; cursor:pointer; transition:transform 0.1s; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:8px; }
-    .store-btn:active { transform:scale(0.97); }
-    .store-android { background:#10b981; color:white; }
-    .store-ios { background:white; color:#111; }
+    /* ══ CONVERSATION ANONYME ══ */
+    #page-conversation { background:var(--bg); }
+    .convo-header { display:flex; align-items:center; justify-content:space-between; padding:calc(var(--safe-top) + 12px) 16px 12px; background:white; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .convo-logo { font-family:'Nunito',sans-serif; font-size:20px; font-weight:900; color:var(--dark); }
+    .convo-dl-btn { padding:9px 16px; border-radius:100px; background:var(--grad); color:white; border:none; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; cursor:pointer; }
+    .exchange-bar { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:white; border-bottom:1px solid var(--border); flex-shrink:0; }
+    .exchange-label { font-size:13px; color:var(--muted); font-weight:500; }
+    .xdots { display:flex; gap:6px; }
+    .xdot { width:10px; height:10px; border-radius:50%; background:var(--red); transition:background 0.3s; }
+    .xdot.used { background:#e0e0e0; }
+    #page-conversation .scroll-area { padding:16px; display:flex; flex-direction:column; gap:10px; }
+    .convo-input-wrap { padding:10px 14px; padding-bottom:calc(var(--safe-bottom) + 10px); background:white; border-top:1px solid var(--border); display:flex; gap:10px; align-items:flex-end; flex-shrink:0; }
+    .paywall-block { display:none; margin:16px; background:white; border-radius:20px; border:1.5px solid var(--border); padding:28px 20px; text-align:center; }
+    .paywall-block.show { display:block; }
+    .paywall-emoji { font-size:44px; margin-bottom:12px; }
+    .paywall-title { font-family:'Nunito',sans-serif; font-size:20px; font-weight:900; margin-bottom:8px; }
+    .paywall-sub { color:var(--muted); font-size:14px; line-height:1.5; margin-bottom:20px; }
+    .dl-btn-android { width:100%; padding:15px; border-radius:100px; background:#111; color:white; border:none; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; margin-bottom:10px; }
+    .dl-btn-ios { width:100%; padding:15px; border-radius:100px; background:var(--bg); color:var(--dark); border:2px solid var(--border); font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; }
 
-    /* ── MODALS ── */
+    /* ══ PAYWALL MODAL ══ */
+    #paywall-modal { display:none; position:fixed; inset:0; z-index:9990; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); align-items:flex-end; justify-content:center; }
     #paywall-modal.show { display:flex !important; }
+    .paywall-sheet { background:white; border-radius:24px 24px 0 0; padding:24px 20px calc(env(safe-area-inset-bottom,0px) + 28px); width:100%; max-width:480px; animation:slideUp 0.3s ease both; max-height:92vh; overflow-y:auto; }
+    .sheet-handle { width:40px; height:4px; background:#e0e0e0; border-radius:4px; margin:0 auto 20px; }
+
+    /* ══ GUIDE iOS ══ */
+    #ios-guide { display:none; position:fixed; inset:0; z-index:9998; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); align-items:flex-end; justify-content:center; }
     #ios-guide.show { display:flex !important; }
+    #android-banner { display:none; position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 14px); left:14px; right:14px; z-index:9997; background:white; border:1.5px solid var(--border); border-radius:18px; padding:14px 16px; align-items:center; gap:12px; box-shadow:0 4px 24px rgba(0,0,0,0.1); }
     #android-banner.show { display:flex !important; }
   </style>
 </head>
@@ -229,309 +250,363 @@
 
 <!-- ══ SPLASH ══ -->
 <div id="page-splash" class="page active">
-  <img class="splash-logo" src="https://i.postimg.cc/0jJ5yVSL/1777374660574.png" alt="NGA"/>
+  <div class="splash-logo-wrap">
+    <img class="splash-logo" src="https://i.postimg.cc/0jJ5yVSL/1777374660574.png" alt="NGA"/>
+    <div class="splash-appname">NGA</div>
+    <div class="splash-tagline">Reçois des messages anonymes de tes amis</div>
+  </div>
   <div class="splash-bottom">
-    <button class="splash-btn" onclick="showPage('platform')">Démarrer</button>
-    <div class="splash-terms">
-      En continuant, vous acceptez notre<br/>
-      <a href="#">Conditions d'utilisation</a> et <a href="#">Politique de confidentialité</a>
-    </div>
+    <button class="btn-red" onclick="showPage('platform')">Commencer</button>
+    <button class="btn-outline" onclick="showAuthPage('login')">J'ai déjà un compte</button>
+    <div class="splash-terms">En continuant vous acceptez nos <a href="#">CGU</a> et <a href="#">Politique de confidentialité</a></div>
   </div>
 </div>
 
-<!-- ══ PLATEFORME ══ -->
+<!-- ══ PLATFORM ══ -->
 <div id="page-platform" class="page">
-  <div class="onboard-header">
-    <button class="back-circle" onclick="showPage('splash')">‹</button>
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('splash')">‹</button>
+    <div class="page-spacer"></div>
   </div>
-  <div class="onboard-title">Où veux-tu<br/>utiliser NGA ?</div>
+  <div class="big-title">Où veux-tu<br/>utiliser NGA ?</div>
   <div class="platform-list">
-    <div class="platform-btn selected" onclick="selectPlatform(this)">
-      <div class="platform-icon" style="background:#e1306c20">📸</div>
+    <div class="platform-item selected" onclick="selectPlatform(this)">
+      <div class="platform-icon" style="background:#fce4ec">📸</div>
       <div class="platform-name">Instagram</div>
-      <div class="platform-check"></div>
+      <div class="platform-radio"></div>
     </div>
-    <div class="platform-btn" onclick="selectPlatform(this)">
-      <div class="platform-icon" style="background:#fffc0020">👻</div>
+    <div class="platform-item" onclick="selectPlatform(this)">
+      <div class="platform-icon" style="background:#fffde7">👻</div>
       <div class="platform-name">Snapchat</div>
-      <div class="platform-check"></div>
+      <div class="platform-radio"></div>
     </div>
-    <div class="platform-btn" onclick="selectPlatform(this)">
-      <div class="platform-icon" style="background:#25d36620">💬</div>
+    <div class="platform-item" onclick="selectPlatform(this)">
+      <div class="platform-icon" style="background:#e8f5e9">💬</div>
       <div class="platform-name">WhatsApp</div>
-      <div class="platform-check"></div>
+      <div class="platform-radio"></div>
     </div>
-    <div class="platform-btn" onclick="selectPlatform(this)">
-      <div class="platform-icon" style="background:#1da1f220">🐦</div>
+    <div class="platform-item" onclick="selectPlatform(this)">
+      <div class="platform-icon" style="background:#e3f2fd">🐦</div>
       <div class="platform-name">Twitter / X</div>
-      <div class="platform-check"></div>
+      <div class="platform-radio"></div>
     </div>
   </div>
-  <div class="onboard-continue">
-    <button class="continue-btn" onclick="showPage('username-setup')">Continuer →</button>
+  <div class="bottom-bar">
+    <button class="btn-red" onclick="showPage('username-setup')">Continuer →</button>
   </div>
 </div>
 
 <!-- ══ USERNAME ══ -->
 <div id="page-username-setup" class="page">
-  <div class="onboard-header">
-    <button class="back-circle" onclick="showPage('platform')">‹</button>
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('platform')">‹</button>
+    <div class="page-title">Nom d'utilisateur</div>
+    <div class="page-spacer"></div>
   </div>
-  <div class="onboard-title">Choisis un nom<br/>d'utilisateur</div>
-  <div style="padding:0 24px">
-    <div class="username-input-wrap">
-      <input type="text" id="setup-username" placeholder="@tonnom" autocorrect="off" autocapitalize="none" maxlength="20"/>
-    </div>
+  <div class="big-title">Choisis ton<br/>identifiant</div>
+  <div class="username-field">
+    <span class="username-at">@</span>
+    <input type="text" id="setup-username" placeholder="tonnom" autocorrect="off" autocapitalize="none" maxlength="20"/>
   </div>
-  <div class="onboard-continue">
-    <button class="continue-btn" onclick="showPage('photo-setup')">Continuer →</button>
+  <div style="padding:12px 20px; color:#999; font-size:13px; line-height:1.5">
+    C'est le nom qui apparaîtra dans ton lien NGA.
+  </div>
+  <div class="bottom-bar">
+    <button class="btn-red" onclick="showPage('photo-setup')">Continuer →</button>
   </div>
 </div>
 
 <!-- ══ PHOTO ══ -->
 <div id="page-photo-setup" class="page">
-  <div class="onboard-header">
-    <button class="back-circle" onclick="showPage('username-setup')">‹</button>
-    <div style="flex:1"></div>
-    <button style="background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer" onclick="showPage('auth')">ignorer</button>
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('username-setup')">‹</button>
+    <div class="page-title">Photo de profil</div>
+    <button style="background:none;border:none;color:#999;font-size:14px;cursor:pointer" onclick="showAuthPage('register')">ignorer</button>
   </div>
-  <div class="onboard-title">Choisis une photo<br/>de profil</div>
-  <div class="photo-area">
-    <div class="photo-circle" onclick="pickPhoto()">
-      <div class="photo-placeholder">👤</div>
-      <img id="profile-photo-preview" src=""/>
-      <div class="photo-plus">+</div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px">
+    <div style="width:130px;height:130px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;overflow:hidden;border:3px dashed #ddd" onclick="document.getElementById('photo-input').click()">
+      <span id="photo-placeholder" style="font-size:52px">👤</span>
+      <img id="profile-photo-preview" src="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover"/>
+      <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.4);padding:6px;text-align:center;font-size:12px;color:white;font-weight:600">Choisir</div>
     </div>
     <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="handlePhotoChange(event)"/>
+    <p style="color:#999;font-size:14px;text-align:center;line-height:1.5;max-width:260px">Ajoute une photo pour que tes amis reconnaissent ton profil</p>
   </div>
-  <div class="onboard-continue">
-    <button class="continue-btn grad" onclick="showPage('auth')">Choisir une photo</button>
+  <div class="bottom-bar">
+    <button class="btn-red" onclick="showAuthPage('register')">Choisir une photo</button>
   </div>
 </div>
 
 <!-- ══ AUTH ══ -->
 <div id="page-auth" class="page">
-  <div class="onboard-header">
-    <button class="back-circle" onclick="showPage('photo-setup')">‹</button>
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('photo-setup')">‹</button>
+    <div class="page-title" id="auth-page-title">Créer un compte</div>
+    <div class="page-spacer"></div>
   </div>
-  <div class="onboard-title" id="auth-title">Crée ton compte</div>
-  <div style="flex:1">
-    <div style="padding:0 24px">
-      <div id="auth-username-field"></div>
-      <input class="auth-input" type="email" id="input-email" placeholder="Email" autocomplete="email"/>
-      <input class="auth-input" type="password" id="input-password" placeholder="Mot de passe" autocomplete="current-password"/>
-      <!-- Google Sign-In -->
-      <button onclick="signInWithGoogle()" style="width:100%;padding:16px;border-radius:16px;border:none;background:white;color:#111;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px">
-        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-        Continuer avec Google
-      </button>
-      <div style="text-align:center;margin-bottom:12px;font-size:13px;color:var(--muted)">— ou —</div>
-      <div style="text-align:center;margin-top:8px;margin-bottom:20px;font-size:14px;color:var(--muted)" id="auth-switch-text">
-        Déjà un compte ? <a style="color:var(--accent);cursor:pointer" onclick="toggleAuth()">Se connecter</a>
-      </div>
+  <div class="scroll-area" style="padding:20px">
+    <div id="auth-username-wrap" style="margin-bottom:10px">
+      <input class="auth-field" type="text" id="input-username" placeholder="Nom d'utilisateur" autocorrect="off" autocapitalize="none"/>
     </div>
-  </div>
-  <div class="onboard-continue">
-    <button class="continue-btn grad" onclick="handleAuth()" id="auth-submit-btn">Créer mon compte</button>
+    <input class="auth-field" type="email" id="input-email" placeholder="Email" autocomplete="email"/>
+    <input class="auth-field" type="password" id="input-password" placeholder="Mot de passe (6 caractères min)" autocomplete="current-password"/>
+    <button class="btn-red" onclick="handleAuth()" id="auth-submit-btn" style="margin-top:4px">Créer mon compte</button>
+    <div class="or-divider">ou</div>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Continuer avec Google
+    </button>
+    <div class="auth-switch" id="auth-switch-text">
+      Déjà un compte ? <a onclick="toggleAuth()">Se connecter</a>
+    </div>
   </div>
 </div>
 
 <!-- ══ MAIN ══ -->
 <div id="page-main" class="page">
-  <div class="tab-bar">
-    <button class="tab-btn" id="tab-play-btn" onclick="switchTab('play')">PLAY</button>
-    <button class="tab-btn active" id="tab-inbox-btn" onclick="switchTab('inbox')">
-      INBOX<div class="tab-notif" id="inbox-notif"></div>
-    </button>
-    <button class="tab-settings" onclick="showPage('settings')">⚙️</button>
+  <div class="main-header">
+    <div class="tab-group">
+      <button class="main-tab" id="tab-play-btn" onclick="switchTab('play')">PLAY</button>
+      <button class="main-tab active" id="tab-inbox-btn" onclick="switchTab('inbox')">
+        INBOX <div class="tab-dot" id="inbox-dot"></div>
+      </button>
+    </div>
+    <button class="settings-btn" onclick="showPage('settings')">⚙️</button>
   </div>
-  <div class="tab-content active" id="tab-play">
+
+  <!-- PLAY -->
+  <div class="tab-content" id="tab-play">
     <div class="scroll-area">
-      <div class="share-card">
-        <div class="share-card-bg">
-          <div class="share-card-avatar" onclick="pickPhoto()">
-            <span id="card-avatar-letter">?</span>
-            <img id="card-avatar-img" src=""/>
-            <div class="edit-avatar-btn">✏️</div>
+      <div class="story-card">
+        <div class="story-card-top" id="story-card-bg">
+          <div class="story-avatar" onclick="document.getElementById('photo-input2').click()">
+            <span id="story-avatar-letter">?</span>
+            <img id="story-avatar-img" src=""/>
           </div>
-          <div class="share-card-text">envoie-moi<br/>des messages<br/>anonymes !</div>
-          <button class="dice-btn" onclick="randomBackground()">🎲</button>
+          <input type="file" id="photo-input2" accept="image/*" style="display:none" onchange="handlePhotoChange2(event)"/>
+          <div class="story-text">envoie-moi<br/>des messages<br/>anonymes !</div>
         </div>
-      </div>
-      <div class="step-card">
-        <div class="step-title">Étape 1 — Copier ton lien</div>
-        <div class="step-link" id="my-link-display">nga.link/...</div>
-        <button class="copy-link-btn" id="copy-link-btn" onclick="copyLink()">🔗 Copier le lien</button>
-      </div>
-      <div class="step-card">
-        <div class="step-title">Étape 2 — Partager dans ta Story</div>
-        <button class="share-big-btn" onclick="shareNative()">Partager !</button>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:4px;margin-bottom:20px">
-        <button style="flex:1;padding:14px;background:var(--dark2);border:none;border-radius:14px;color:white;font-size:14px;font-weight:600;cursor:pointer" onclick="shareWhatsApp()">📱 WhatsApp</button>
-        <button style="flex:1;padding:14px;background:var(--dark2);border:none;border-radius:14px;color:white;font-size:14px;font-weight:600;cursor:pointer" onclick="shareTelegram()">✈️ Telegram</button>
+        <div class="story-card-bottom">
+          <div class="story-link" id="my-link-display">nga.link/...</div>
+          <button class="copy-btn-outline" id="copy-link-btn" onclick="copyLink()">🔗 Copier le lien</button>
+          <div class="share-row">
+            <button class="share-pill share-wa" onclick="shareWhatsApp()">📱 WhatsApp</button>
+            <button class="share-pill share-tg" onclick="shareTelegram()">✈️ Telegram</button>
+            <button class="share-pill share-more" onclick="shareNative()">↗️ Plus</button>
+          </div>
+          <div class="dice-row">
+            <button class="dice-btn" onclick="randomBackground()">🎲 Changer le thème</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="tab-content" id="tab-inbox">
+
+  <!-- INBOX -->
+  <div class="tab-content active" id="tab-inbox">
     <div class="scroll-area">
-      <div id="inbox-empty" class="inbox-empty">
+      <div id="inbox-empty-wrap" class="inbox-empty-wrap">
+        <div class="inbox-empty-icon">💌</div>
         <div class="inbox-empty-title">Ton inbox est vide</div>
-        <div class="inbox-empty-sub">Partage ton lien pour recevoir des messages</div>
-        <div class="placeholder-grid">
-          <div class="placeholder-cell"></div><div class="placeholder-cell"></div><div class="placeholder-cell"></div>
-          <div class="placeholder-cell"></div><div class="placeholder-cell"></div><div class="placeholder-cell"></div>
-          <div class="placeholder-cell"></div><div class="placeholder-cell"></div><div class="placeholder-cell"></div>
-          <div class="placeholder-cell"></div><div class="placeholder-cell"></div><div class="placeholder-cell"></div>
-        </div>
-        <button class="inbox-cta-btn" onclick="switchTab('play')">Reçois des messages !</button>
+        <div class="inbox-empty-sub">Partage ton lien NGA pour<br/>commencer à recevoir des messages !</div>
+        <button class="btn-red" style="margin-top:24px;width:100%" onclick="switchTab('play')">Partager mon lien</button>
       </div>
       <div class="inbox-list" id="inbox-list" style="display:none"></div>
+    </div>
+    <!-- Bouton rouge fixe NGL-style -->
+    <div class="who-sent-bar" id="who-sent-bar" style="display:none">
+      <button class="who-sent-btn" onclick="showToast('Fonctionnalité Premium bientôt disponible 👀')">
+        Qui a envoyé ceci ? 👀
+      </button>
     </div>
   </div>
 </div>
 
 <!-- ══ SETTINGS ══ -->
 <div id="page-settings" class="page">
-  <div class="onboard-header">
-    <button class="back-circle" onclick="showPage('main')">‹</button>
-    <div style="flex:1;text-align:center"><span style="font-family:'Nunito',sans-serif;font-size:18px;font-weight:900">Paramètres</span></div>
-    <div style="width:38px"></div>
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('main')">‹</button>
+    <div class="page-title">Paramètres</div>
+    <div class="page-spacer"></div>
   </div>
-  <div class="settings-list">
-    <div class="settings-item"><span class="settings-label" id="settings-username">@utilisateur</span><span class="settings-icon">👤</span></div>
-    <div class="settings-item" onclick="copyLink()"><span class="settings-label">Copier mon lien</span><span class="settings-icon">🔗</span></div>
-    <div class="settings-item"><span class="settings-label">Notifications</span><span class="settings-icon">🔔</span></div>
-    <button class="logout-btn" onclick="logout()">Se déconnecter</button>
+  <div class="scroll-area" style="padding-top:16px">
+    <div class="settings-section">Mon compte</div>
+    <div class="settings-card">
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <div class="settings-row-icon" style="background:#fce4ec">👤</div>
+          <div class="settings-row-label" id="settings-username">@utilisateur</div>
+        </div>
+      </div>
+      <div class="settings-row" onclick="copyLink()">
+        <div class="settings-row-left">
+          <div class="settings-row-icon" style="background:#e3f2fd">🔗</div>
+          <div class="settings-row-label">Copier mon lien</div>
+        </div>
+        <span class="settings-row-arrow">›</span>
+      </div>
+    </div>
+    <div class="settings-section">App</div>
+    <div class="settings-card">
+      <div class="settings-row" onclick="showIOSGuide()">
+        <div class="settings-row-left">
+          <div class="settings-row-icon" style="background:#e8f5e9">📲</div>
+          <div class="settings-row-label">Installer sur l'écran d'accueil</div>
+        </div>
+        <span class="settings-row-arrow">›</span>
+      </div>
+    </div>
+    <div class="logout-card">
+      <div class="logout-row" onclick="logout()">Se déconnecter</div>
+    </div>
   </div>
 </div>
 
 <!-- ══ CHAT (owner) ══ -->
 <div id="page-chat" class="page">
-  <div class="chat-topbar">
-    <button class="back-circle" onclick="showPage('main')">‹</button>
-    <div class="chat-info"><h3>Anonyme 👻</h3><span id="chat-time">Message reçu récemment</span></div>
-    <button class="del-btn" onclick="deleteMessage()">Suppr.</button>
-  </div>
-  <!-- Indices premium -->
-  <div id="hints-bar" style="display:none;align-items:center;gap:10px;padding:10px 16px;background:#1a1a26;border-bottom:1px solid #ffffff12;flex-shrink:0;position:relative;cursor:pointer" onclick="onHintsClick()">
-    <span style="font-size:12px;color:#7777aa;font-weight:600;letter-spacing:1px;text-transform:uppercase">🔍 Indices</span>
-    <div style="display:flex;gap:8px;flex:1;flex-wrap:wrap">
-      <span style="background:#12121a;border:1px solid #ffffff12;border-radius:100px;padding:4px 12px;font-size:12px">📱 <span id="hint-device">?</span></span>
-      <span style="background:#12121a;border:1px solid #ffffff12;border-radius:100px;padding:4px 12px;font-size:12px">📍 <span id="hint-city">?</span></span>
-      <span style="background:#12121a;border:1px solid #ffffff12;border-radius:100px;padding:4px 12px;font-size:12px">🌍 <span id="hint-country">?</span></span>
+  <div class="chat-header">
+    <button class="back-btn" onclick="showPage('main')">‹</button>
+    <div class="chat-header-info">
+      <div class="chat-header-title">Anonyme 👻</div>
+      <div class="chat-header-sub" id="chat-time">Message reçu récemment</div>
     </div>
-    <div id="hints-lock-overlay" style="display:none;position:absolute;inset:0;background:#0a0a0fcc;backdrop-filter:blur(3px);align-items:center;justify-content:center;font-size:13px;color:#c084fc;font-weight:600">🔒 Premium pour voir les indices</div>
+    <button class="chat-del-btn" onclick="deleteMessage()">Supprimer</button>
+  </div>
+  <div class="hints-bar" id="hints-bar" onclick="onHintsClick()">
+    <span style="font-size:12px;color:#999;font-weight:600;letter-spacing:0.5px">🔍 INDICES</span>
+    <span class="hint-chip" id="hint-device">📱 ?</span>
+    <span class="hint-chip" id="hint-city">📍 ?</span>
+    <span class="hint-chip" id="hint-country">🌍 ?</span>
   </div>
   <div class="scroll-area" id="chat-messages"></div>
-  <div class="chat-input-bar">
-    <textarea id="reply-input" rows="1" placeholder="Répondre..." oninput="autoResize(this)"></textarea>
-    <button class="send-btn" onclick="sendReply()">➤</button>
-  </div>
-</div>
-
-<!-- ══ MODAL PAYWALL ══ -->
-<div id="paywall-modal" style="display:none;position:fixed;inset:0;z-index:9990;background:#000000dd;backdrop-filter:blur(10px);align-items:flex-end;justify-content:center">
-  <div style="background:#12121a;border:1px solid #ffffff15;border-radius:28px 28px 0 0;padding:28px 24px calc(env(safe-area-inset-bottom,0px) + 32px);width:100%;max-width:480px;animation:slideUp 0.35s ease both">
-    <div style="width:40px;height:4px;background:#ffffff20;border-radius:4px;margin:0 auto 24px"></div>
-    <div style="font-size:44px;text-align:center;margin-bottom:16px">🔐</div>
-    <h3 style="font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;text-align:center;margin-bottom:10px">Tu as atteint la limite !</h3>
-    <p style="color:#7777aa;font-size:15px;text-align:center;line-height:1.6;margin-bottom:28px">Tu as envoyé <strong style="color:white">3 messages anonymes</strong>.<br/>Connecte-toi gratuitement pour continuer.</p>
-    <button onclick="signInWithGoogle()" style="width:100%;padding:16px;border-radius:16px;border:none;background:white;color:#111;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px">
-      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-      Continuer avec Google
-    </button>
-    <button onclick="closePaywallModal();showPage('auth')" style="width:100%;padding:14px;border-radius:16px;border:1px solid #ffffff15;background:transparent;color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px">📧 Continuer avec email</button>
-    <button onclick="closePaywallModal()" style="width:100%;padding:12px;border-radius:16px;border:none;background:transparent;color:#7777aa;font-family:'Inter',sans-serif;font-size:14px;cursor:pointer">Annuler</button>
+  <div class="chat-input-wrap">
+    <textarea class="chat-textarea" id="reply-input" rows="1" placeholder="Répondre..." oninput="autoResize(this)"></textarea>
+    <button class="chat-send-btn" onclick="sendReply()">➤</button>
   </div>
 </div>
 
 <!-- ══ PUBLIC ══ -->
 <div id="page-public" class="page">
-  <div class="public-topbar">
-    <button class="public-get-btn" onclick="showPage('platform')">Créer le mien 🚀</button>
+  <div class="public-header">
+    <button class="get-app-btn" onclick="showPage('platform')">Créer le mien 🚀</button>
   </div>
   <div class="scroll-area">
-    <div class="public-card">
-      <div class="public-avatar" id="public-avatar">?</div>
-      <div class="public-card-text">envoie-moi<br/>des messages<br/>anonymes !</div>
+    <div class="public-hero">
+      <div class="public-hero-avatar" id="public-avatar">?</div>
+      <div class="public-hero-text">envoie-moi<br/>des messages<br/>anonymes !</div>
     </div>
-    <div id="anon-form-wrap">
-      <div class="anon-hint">👻 <span>Ton identité restera totalement cachée.</span></div>
-      <textarea class="anon-textarea" id="anon-message" placeholder="Écris ton message ici..."></textarea>
-      <button class="send-anon-btn" onclick="sendAnonMessage()">Envoyer anonymement 💜</button>
-    </div>
-    <div id="sent-success">
-      <div class="sent-icon">🚀</div>
-      <div class="sent-title">Message envoyé !</div>
-      <div class="sent-sub">Tu recevras la réponse sur le lien ci-dessous.<br/>Garde-le précieusement 👇</div>
-      <div class="thread-link-box">
-        <div class="tl-label">Ton lien de suivi</div>
-        <div class="tl-url" id="thread-link-display"></div>
+    <div class="public-form">
+      <div id="anon-form-wrap">
+        <div class="anon-hint-box">👻 <span>Ton identité restera totalement cachée.</span></div>
+        <div id="anon-counter-wrap"></div>
+        <textarea class="public-textarea" id="anon-message" placeholder="Écris ton message ici..."></textarea>
+        <button class="send-btn-red" onclick="sendAnonMessage()">Envoyer anonymement 💜</button>
       </div>
-      <button class="send-anon-btn" onclick="copyThreadLink()" style="margin-bottom:10px">📋 Copier mon lien</button>
-      <button class="send-anon-btn" style="background:var(--dark2)" onclick="goToConversation()">Voir la conversation →</button>
-      <button style="background:none;border:none;color:var(--muted);font-size:14px;margin-top:14px;cursor:pointer;width:100%" onclick="resetAnonForm()">Envoyer un autre message</button>
+      <div class="sent-success" id="sent-success">
+        <div class="sent-emoji">🚀</div>
+        <div class="sent-title">Message envoyé !</div>
+        <div class="sent-sub">Tu recevras la réponse sur le lien ci-dessous.<br/>Garde-le précieusement 👇</div>
+        <div class="thread-box">
+          <div class="thread-box-label">Ton lien de suivi</div>
+          <div class="thread-box-url" id="thread-link-display"></div>
+        </div>
+        <button class="send-btn-red" onclick="copyThreadLink()" style="margin-bottom:10px">📋 Copier mon lien</button>
+        <button class="send-btn-red" style="background:var(--bg);color:var(--dark);border:2px solid var(--border)" onclick="goToConversation()">Voir la conversation →</button>
+        <button style="background:none;border:none;color:#999;font-size:14px;margin-top:16px;cursor:pointer;width:100%" onclick="resetAnonForm()">Envoyer un autre message</button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ══ CONVERSATION ANONYME ══ -->
 <div id="page-conversation" class="page">
-  <div class="convo-topbar">
-    <img src="https://i.postimg.cc/0jJ5yVSL/1777374660574.png" alt="NGA" style="height:36px;object-fit:contain"/>
-    <button class="download-app-btn" onclick="downloadApp()">📲 App gratuite</button>
+  <div class="convo-header">
+    <div class="convo-logo">NGA</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="clearSavedThread()" style="background:none;border:1px solid var(--border);border-radius:100px;color:#999;font-size:12px;padding:6px 12px;cursor:pointer">✕ Oublier</button>
+      <button class="convo-dl-btn" onclick="downloadApp()">📲 App gratuite</button>
+    </div>
   </div>
   <div class="exchange-bar">
-    <span id="exchange-label">3 échanges gratuits</span>
-    <div class="exchange-dots" id="exchange-dots"></div>
+    <span class="exchange-label" id="exchange-label">3 échanges gratuits</span>
+    <div class="xdots" id="exchange-dots"></div>
   </div>
   <div class="scroll-area" id="convo-messages"></div>
-  <div class="chat-input-bar" id="convo-input-bar">
-    <textarea id="convo-reply" rows="1" placeholder="Répondre anonymement..." oninput="autoResize(this)"></textarea>
-    <button class="send-btn" onclick="sendAnonReply()">➤</button>
+  <div class="convo-input-wrap" id="convo-input-bar">
+    <textarea class="chat-textarea" id="convo-reply" rows="1" placeholder="Répondre anonymement..." oninput="autoResize(this)"></textarea>
+    <button class="chat-send-btn" onclick="sendAnonReply()">➤</button>
   </div>
-  <div class="paywall" id="paywall">
-    <div class="paywall-icon">🔓</div>
-    <h3>Continue sur l'app !</h3>
-    <p>Télécharge NGA gratuitement pour continuer à discuter sans limite.</p>
-    <button class="store-btn store-android" onclick="downloadAndroid()">🤖 Android (APK)</button>
-    <button class="store-btn store-ios" onclick="downloadIOS()">🍎 App Store iOS</button>
+  <div class="paywall-block" id="paywall">
+    <div class="paywall-emoji">🔓</div>
+    <div class="paywall-title">Continue sur l'app !</div>
+    <p class="paywall-sub">Télécharge NGA gratuitement pour continuer à discuter sans limite.</p>
+    <button class="dl-btn-android" onclick="downloadAndroid()">🤖 Télécharger (Android)</button>
+    <button class="dl-btn-ios" onclick="downloadIOS()">🍎 App Store iOS</button>
   </div>
+</div>
+
+<!-- ══ PAYWALL MODAL ══ -->
+<div id="paywall-modal">
+  <div class="paywall-sheet">
+    <div class="sheet-handle"></div>
+    <div id="paywall-view-choice">
+      <div style="font-size:40px;text-align:center;margin-bottom:12px">🔐</div>
+      <h3 style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;text-align:center;margin-bottom:8px">Limite atteinte !</h3>
+      <p style="color:#999;font-size:14px;text-align:center;line-height:1.5;margin-bottom:24px">Tu as envoyé 3 messages anonymes.<br/>Connecte-toi pour continuer gratuitement.</p>
+      <button onclick="signInWithGoogle()" style="width:100%;padding:15px;border-radius:14px;border:2px solid var(--border);background:white;color:var(--dark);font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continuer avec Google
+      </button>
+      <button onclick="showPaywallForm('login')" style="width:100%;padding:14px;border-radius:14px;border:2px solid var(--border);background:white;color:var(--dark);font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px">📧 Se connecter avec email</button>
+      <button onclick="showPaywallForm('register')" style="width:100%;padding:14px;border-radius:14px;border:none;background:var(--grad);color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px">✨ Créer un compte gratuit</button>
+      <button onclick="closePaywallModal()" style="width:100%;padding:10px;border:none;background:none;color:#999;font-size:13px;cursor:pointer">Annuler</button>
+    </div>
+    <div id="paywall-view-form" style="display:none">
+      <button onclick="showPaywallChoice()" style="background:none;border:none;color:#999;font-size:14px;cursor:pointer;margin-bottom:16px">← Retour</button>
+      <h3 id="paywall-form-title" style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;margin-bottom:20px">Se connecter</h3>
+      <div id="paywall-username-field" style="display:none;margin-bottom:10px">
+        <input id="paywall-username" type="text" placeholder="Nom d'utilisateur" autocorrect="off" autocapitalize="none" style="width:100%;background:var(--bg);border:2px solid var(--border);border-radius:14px;color:var(--dark);font-size:16px;padding:14px 16px;outline:none;font-family:'Inter',sans-serif;-webkit-appearance:none;margin-bottom:10px"/>
+      </div>
+      <input id="paywall-email" type="email" placeholder="Email" autocomplete="email" style="width:100%;background:var(--bg);border:2px solid var(--border);border-radius:14px;color:var(--dark);font-size:16px;padding:14px 16px;outline:none;font-family:'Inter',sans-serif;-webkit-appearance:none;margin-bottom:10px"/>
+      <input id="paywall-password" type="password" placeholder="Mot de passe" autocomplete="current-password" style="width:100%;background:var(--bg);border:2px solid var(--border);border-radius:14px;color:var(--dark);font-size:16px;padding:14px 16px;outline:none;font-family:'Inter',sans-serif;-webkit-appearance:none;margin-bottom:20px"/>
+      <button onclick="handlePaywallAuth()" id="paywall-submit-btn" style="width:100%;padding:16px;border-radius:14px;border:none;background:var(--grad);color:white;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-bottom:12px">Se connecter</button>
+      <div id="paywall-switch" style="text-align:center;font-size:13px;color:#999">Pas de compte ? <a onclick="showPaywallForm('register')" style="color:var(--red);cursor:pointer;font-weight:600">Créer un compte</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GUIDE iOS ══ -->
+<div id="ios-guide">
+  <div style="background:white;border-radius:24px 24px 0 0;padding:24px 20px calc(env(safe-area-inset-bottom,0px) + 24px);width:100%;animation:slideUp 0.3s ease both">
+    <div style="width:40px;height:4px;background:#e0e0e0;border-radius:4px;margin:0 auto 20px"></div>
+    <h3 style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;margin-bottom:6px">📲 Installer NGA sur iPhone</h3>
+    <p style="color:#999;font-size:14px;margin-bottom:24px;line-height:1.5">3 étapes simples dans Safari :</p>
+    <div style="display:flex;gap:12px;margin-bottom:16px;align-items:flex-start">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0;color:white">1</div>
+      <div><b style="font-size:15px">Bouton Partager ⬆️</b><br/><span style="color:#999;font-size:13px">En bas de Safari</span></div>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:16px;align-items:flex-start">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0;color:white">2</div>
+      <div><b style="font-size:15px">"Sur l'écran d'accueil" 🏠</b><br/><span style="color:#999;font-size:13px">Fais défiler le menu</span></div>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:28px;align-items:flex-start">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0;color:white">3</div>
+      <div><b style="font-size:15px">"Ajouter" en haut à droite 🎉</b><br/><span style="color:#999;font-size:13px">C'est tout !</span></div>
+    </div>
+    <button onclick="closeIOSGuide()" style="width:100%;padding:16px;border-radius:100px;border:none;background:var(--grad);color:white;font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;cursor:pointer">Compris 👍</button>
+    <button onclick="closeIOSGuide()" style="width:100%;padding:12px;border:none;background:none;color:#999;font-size:13px;cursor:pointer;margin-top:8px">Fermer</button>
+  </div>
+</div>
+
+<!-- ══ BANNIÈRE ANDROID ══ -->
+<div id="android-banner">
+  <div style="width:42px;height:42px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">💜</div>
+  <div style="flex:1"><div style="font-weight:700;font-size:14px">Installer NGA</div><div style="color:#999;font-size:12px">Ajouter à l'écran d'accueil</div></div>
+  <button onclick="installPWA()" style="background:var(--grad);border:none;border-radius:100px;color:white;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;padding:8px 14px;cursor:pointer">Installer</button>
+  <button onclick="dismissAndroidBanner()" style="background:none;border:none;color:#999;font-size:20px;cursor:pointer">×</button>
 </div>
 
 <div class="toast" id="toast"></div>
-
-<!-- ══ GUIDE iOS ══ -->
-<div id="ios-guide" style="display:none;position:fixed;inset:0;z-index:9998;background:#000000cc;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:flex-end;justify-content:center">
-  <div style="background:#12121a;border:1px solid #ffffff15;border-radius:24px 24px 0 0;padding:28px 24px calc(env(safe-area-inset-bottom,0px) + 28px);width:100%;animation:slideUp 0.35s ease both">
-    <div style="width:40px;height:4px;background:#ffffff20;border-radius:4px;margin:0 auto 24px"></div>
-    <h3 style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px">📲 Installer NGA sur iPhone</h3>
-    <p style="color:#7777aa;font-size:14px;margin-bottom:24px;line-height:1.5">Suis ces 3 étapes dans Safari :</p>
-    <div style="display:flex;gap:14px;margin-bottom:18px;align-items:flex-start">
-      <div style="width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;color:white">1</div>
-      <div><div style="font-weight:600;font-size:15px;margin-bottom:4px">Appuie sur le bouton Partager</div><div style="color:#7777aa;font-size:13px">L'icône <strong style="color:#c084fc">⬆️</strong> en bas de Safari</div></div>
-    </div>
-    <div style="display:flex;gap:14px;margin-bottom:18px;align-items:flex-start">
-      <div style="width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;color:white">2</div>
-      <div><div style="font-weight:600;font-size:15px;margin-bottom:4px">Faire défiler et choisir</div><div style="color:#7777aa;font-size:13px">Appuie sur <strong style="color:#c084fc">"Sur l'écran d'accueil"</strong> 🏠</div></div>
-    </div>
-    <div style="display:flex;gap:14px;margin-bottom:28px;align-items:flex-start">
-      <div style="width:36px;height:36px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;color:white">3</div>
-      <div><div style="font-weight:600;font-size:15px;margin-bottom:4px">Confirmer l'ajout</div><div style="color:#7777aa;font-size:13px">Appuie sur <strong style="color:#c084fc">"Ajouter"</strong> en haut à droite 🎉</div></div>
-    </div>
-    <button onclick="closeIOSGuide()" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--grad);color:white;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer">Compris ! 👍</button>
-    <button onclick="closeIOSGuide()" style="width:100%;padding:12px;border-radius:16px;border:1px solid #ffffff15;background:transparent;color:#7777aa;font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;margin-top:10px">Fermer</button>
-  </div>
-</div>
-
-<!-- ══ BANNIÈRE ANDROID PWA ══ -->
-<div id="android-banner" style="display:none;position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:16px;right:16px;z-index:9997;background:#12121a;border:1px solid #7c5cfc40;border-radius:18px;padding:16px 18px;align-items:center;gap:14px;box-shadow:0 8px 32px #7c5cfc30;animation:slideUp 0.4s ease both">
-  <div style="width:44px;height:44px;border-radius:12px;flex-shrink:0;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:22px">💜</div>
-  <div style="flex:1"><div style="font-weight:600;font-size:14px">Installer NGA</div><div style="color:#7777aa;font-size:12px">Ajouter à l'écran d'accueil</div></div>
-  <button onclick="installPWA()" style="background:var(--grad);border:none;border-radius:10px;color:white;font-family:'Inter',sans-serif;font-weight:600;font-size:13px;padding:9px 14px;cursor:pointer">Installer</button>
-  <button onclick="dismissAndroidBanner()" style="background:transparent;border:none;color:#7777aa;font-size:20px;cursor:pointer;padding:4px;line-height:1">×</button>
-</div>
 
 <!-- ══ FIREBASE ══ -->
 <script type="module">
@@ -539,10 +614,10 @@
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // ✅ Ton URL Vercel
-  const APP_URL = "https://whispr-chi-three.vercel.app";
+  
+const APP_URL = "https://whispr-chi-three.vercel.app";
 
-  const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyA6h9QC2n2yqJT0OKbBnCDRDu3Ce6xdGv0",
   authDomain: "anonyme-8c9c2.firebaseapp.com",
   projectId: "anonyme-8c9c2",
@@ -554,527 +629,471 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  window._auth = auth; window._db = db;
 
-  let currentUser = null, currentUsername = null;
-  let currentMessageId = null, currentConversation = [];
-  let currentThreadData = null;
+  let currentUser=null, currentUsername=null, currentMessageId=null, currentConversation=[], currentThreadData=null;
 
-  function generateToken() {
-    return Math.random().toString(36).substring(2,15) + Math.random().toString(36).substring(2,15);
-  }
+  function generateToken() { return Math.random().toString(36).substring(2,15)+Math.random().toString(36).substring(2,15); }
 
   // ── AUTH STATE ──
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      currentUser = user;
-      const snap = await getDoc(doc(db,"users",user.uid));
+      currentUser=user;
+      const snap=await getDoc(doc(db,"users",user.uid));
       if (snap.exists()) {
-        currentUsername = snap.data().username;
-        window.currentUsername = currentUsername;
-        updateUIForUser();
+        currentUsername=snap.data().username;
+        window.currentUsername=currentUsername;
+        updateMainUI();
         loadMessages();
-        showPage('main');
-        switchTab('inbox');
+        showPage('main'); switchTab('inbox');
       }
     }
   });
 
-  function updateUIForUser() {
-    const link = `${APP_URL}?u=${currentUsername}`;
-    const el = document.getElementById('my-link-display');
-    if (el) el.textContent = link;
-    const su = document.getElementById('settings-username');
-    if (su) su.textContent = '@' + currentUsername;
-    const cl = document.getElementById('card-avatar-letter');
-    if (cl) cl.textContent = currentUsername.charAt(0).toUpperCase();
+  function updateMainUI() {
+    const link=`${APP_URL}?u=${currentUsername}`;
+    const el=document.getElementById('my-link-display');
+    if (el) el.textContent=link;
+    const su=document.getElementById('settings-username');
+    if (su) su.textContent='@'+currentUsername;
+    const al=document.getElementById('story-avatar-letter');
+    if (al) al.textContent=currentUsername.charAt(0).toUpperCase();
   }
 
-  // ── HANDLE AUTH EMAIL ──
+  // ── AUTH EMAIL ──
   window.handleAuth = async function() {
-    const isReg = document.getElementById('auth-submit-btn').textContent.includes('Créer');
-    const email = document.getElementById('input-email').value.trim();
-    const password = document.getElementById('input-password').value;
-    const usernameInput = document.getElementById('setup-username');
-    const username = usernameInput ? usernameInput.value.trim().toLowerCase().replace('@','') : '';
-    if (!email || !password) return showToast('Remplis tous les champs');
+    const isReg=document.getElementById('auth-submit-btn').getAttribute('data-mode')==='register';
+    const email=document.getElementById('input-email').value.trim();
+    const password=document.getElementById('input-password').value;
+    const username=document.getElementById('input-username').value.trim().toLowerCase().replace('@','');
+    if (!email||!password) return showToast('Remplis tous les champs');
     try {
       if (isReg) {
         if (!username) return showToast("Choisis un nom d'utilisateur");
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await setDoc(doc(db,"users",cred.user.uid), { username, email, createdAt: serverTimestamp() });
-        currentUsername = username; window.currentUsername = username;
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
+        const cred=await createUserWithEmailAndPassword(auth,email,password);
+        await setDoc(doc(db,"users",cred.user.uid),{username,email,createdAt:serverTimestamp()});
+        currentUsername=username; window.currentUsername=username;
+      } else { await signInWithEmailAndPassword(auth,email,password); }
     } catch(e) {
-      const msgs = {'auth/email-already-in-use':'Email déjà utilisé','auth/weak-password':'Mot de passe trop court','auth/wrong-password':'Mot de passe incorrect','auth/user-not-found':'Compte introuvable'};
-      showToast(msgs[e.code] || 'Erreur: '+e.message);
+      const m={'auth/email-already-in-use':'Email déjà utilisé','auth/weak-password':'Mot de passe trop court','auth/wrong-password':'Mot de passe incorrect','auth/user-not-found':'Compte introuvable','auth/invalid-email':'Email invalide'};
+      showToast(m[e.code]||'Erreur: '+e.message);
     }
   };
 
-  // ── GOOGLE SIGN IN ──
+  // ── GOOGLE ──
   window.signInWithGoogle = async function() {
     try {
-      const provider = new GoogleAuthProvider();
-      const cred = await signInWithPopup(auth, provider);
-      const user = cred.user;
-      const snap = await getDoc(doc(db,"users",user.uid));
+      const cred=await signInWithPopup(auth,new GoogleAuthProvider());
+      const snap=await getDoc(doc(db,"users",cred.user.uid));
       if (!snap.exists()) {
-        const username = user.displayName
-          ? user.displayName.toLowerCase().replace(/\s+/g,'_').substring(0,20)
-          : 'user_' + user.uid.substring(0,6);
-        await setDoc(doc(db,"users",user.uid), { username, email:user.email, displayName:user.displayName||'', photoURL:user.photoURL||'', createdAt:serverTimestamp() });
+        const username=cred.user.displayName?cred.user.displayName.toLowerCase().replace(/\s+/g,'_').substring(0,20):'user_'+cred.user.uid.substring(0,6);
+        await setDoc(doc(db,"users",cred.user.uid),{username,email:cred.user.email,displayName:cred.user.displayName||'',createdAt:serverTimestamp()});
       }
       closePaywallModal();
       localStorage.removeItem('nga_anon_count');
       if (window._pendingAnonMsg) {
-        const { text, targetUser } = window._pendingAnonMsg;
-        window._pendingAnonMsg = null;
-        await _doSendAnon(text, targetUser);
+        const {text,targetUser}=window._pendingAnonMsg; window._pendingAnonMsg=null;
+        await _doSendAnon(text,targetUser);
       }
-    } catch(e) {
-      if (e.code !== 'auth/popup-closed-by-user') showToast('Erreur connexion Google');
-    }
+    } catch(e) { if (e.code!=='auth/popup-closed-by-user') showToast('Erreur Google'); }
   };
 
-  window.logout = async function() {
-    await signOut(auth);
-    currentUser = null; currentUsername = null; showPage('splash');
-  };
+  window.logout=async function() { await signOut(auth); currentUser=null; currentUsername=null; showPage('splash'); };
 
   // ── MESSAGES ──
   async function loadMessages() {
     if (!currentUser) return;
-    const q = query(collection(db,"users",currentUser.uid,"messages"), orderBy("createdAt","desc"));
-    onSnapshot(q, (snap) => {
-      const unread = snap.docs.filter(d => !d.data().read).length;
-      const notif = document.getElementById('inbox-notif');
-      if (notif) notif.classList.toggle('show', unread > 0);
-      const emptyDiv = document.getElementById('inbox-empty');
-      const listDiv = document.getElementById('inbox-list');
+    const q=query(collection(db,"users",currentUser.uid,"messages"),orderBy("createdAt","desc"));
+    onSnapshot(q,(snap)=>{
+      const unread=snap.docs.filter(d=>!d.data().read).length;
+      document.getElementById('inbox-dot').classList.toggle('show',unread>0);
+      const whoBar=document.getElementById('who-sent-bar');
+      const emptyWrap=document.getElementById('inbox-empty-wrap');
+      const list=document.getElementById('inbox-list');
       if (snap.empty) {
-        if (emptyDiv) emptyDiv.style.display='block';
-        if (listDiv) listDiv.style.display='none';
-        return;
+        emptyWrap.style.display='block'; list.style.display='none';
+        if (whoBar) whoBar.style.display='none'; return;
       }
-      if (emptyDiv) emptyDiv.style.display='none';
-      if (listDiv) listDiv.style.display='flex';
-      listDiv.innerHTML='';
-      snap.docs.forEach((d,i) => {
-        const data = d.data();
-        const el = document.createElement('div');
-        el.className=`inbox-item fadein ${!data.read?'unread':''}`;
-        el.style.animationDelay=`${i*0.05}s`;
-        const ts = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
-        el.innerHTML=`<div class="inbox-preview">${escapeHtml(data.content)}</div><div class="inbox-meta"><span>${timeAgo(ts)}</span><span class="inbox-tag ${data.replied?'replied':''}">${data.replied?'✓ Répondu':'Sans réponse'}</span></div>`;
+      emptyWrap.style.display='none'; list.style.display='flex';
+      if (whoBar) whoBar.style.display='block';
+      list.innerHTML='';
+      snap.docs.forEach((d,i)=>{
+        const data=d.data();
+        const el=document.createElement('div');
+        el.className='inbox-item fadein';
+        el.style.animationDelay=`${i*0.04}s`;
+        const ts=data.createdAt?.toDate?data.createdAt.toDate():new Date();
+        el.innerHTML=`
+          <div class="msg-icon-wrap ${!data.read?'unread':'read'}">
+            <span class="msg-icon">💌</span>
+          </div>
+          <div class="inbox-content">
+            <div class="inbox-title ${!data.read?'unread':'read'}">${!data.read?'Nouveau Message!':'Message'}</div>
+            <div class="inbox-preview">${escapeHtml(data.content)}</div>
+          </div>
+          <span class="inbox-time">${timeAgo(ts)}</span>
+          <span class="inbox-arrow">›</span>`;
         el.onclick=()=>openChat(d.id,data);
-        listDiv.appendChild(el);
+        list.appendChild(el);
       });
     });
   }
 
-  window.openChat = async function(msgId, data) {
-    currentMessageId = msgId;
-    currentConversation = data.conversation || [{role:'anon',text:data.content,ts:data.createdAt}];
-    await updateDoc(doc(db,"users",currentUser.uid,"messages",msgId), {read:true});
-    const ts = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
-    document.getElementById('chat-time').textContent = 'Reçu '+timeAgo(ts);
-    // Hints premium
-    const userSnap = await getDoc(doc(db,"users",currentUser.uid));
-    const isPremium = userSnap.exists() && userSnap.data().isPremium === true;
-    const hintsBar = document.getElementById('hints-bar');
-    if (hintsBar) {
-      if (data.hints) {
-        hintsBar.style.display='flex';
-        document.getElementById('hint-device').textContent = isPremium ? (data.hints.device||'?') : '???';
-        document.getElementById('hint-city').textContent = isPremium ? (data.hints.city||'?') : '???';
-        document.getElementById('hint-country').textContent = isPremium ? (data.hints.country||'?') : '???';
-        if (!isPremium) {
-          hintsBar.setAttribute('data-locked','true');
-          document.getElementById('hints-lock-overlay').style.display='flex';
-        }
-      } else { hintsBar.style.display='none'; }
-    }
+  window.openChat=async function(msgId,data) {
+    currentMessageId=msgId;
+    currentConversation=data.conversation||[{role:'anon',text:data.content,ts:data.createdAt}];
+    await updateDoc(doc(db,"users",currentUser.uid,"messages",msgId),{read:true});
+    const ts=data.createdAt?.toDate?data.createdAt.toDate():new Date();
+    document.getElementById('chat-time').textContent='Reçu '+timeAgo(ts);
+    // Hints
+    const uSnap=await getDoc(doc(db,"users",currentUser.uid));
+    const isPremium=uSnap.exists()&&uSnap.data().isPremium===true;
+    const hBar=document.getElementById('hints-bar');
+    if (hBar&&data.hints) {
+      hBar.style.display='flex';
+      document.getElementById('hint-device').textContent='📱 '+(isPremium?data.hints.device:'???');
+      document.getElementById('hint-city').textContent='📍 '+(isPremium?data.hints.city:'???');
+      document.getElementById('hint-country').textContent='🌍 '+(isPremium?data.hints.country:'???');
+      hBar.setAttribute('data-locked',isPremium?'false':'true');
+      const chips=hBar.querySelectorAll('.hint-chip');
+      chips.forEach(c=>c.classList.toggle('hint-locked',!isPremium));
+    } else if (hBar) hBar.style.display='none';
     renderOwnerChat(); showPage('chat');
   };
 
   function renderOwnerChat() {
-    const c = document.getElementById('chat-messages');
-    c.innerHTML='';
-    currentConversation.forEach((msg,i) => {
-      const w = document.createElement('div');
-      w.style.display='flex'; w.style.animationDelay=`${i*0.06}s`; w.className='fadein';
+    const c=document.getElementById('chat-messages'); c.innerHTML='';
+    currentConversation.forEach((msg,i)=>{
+      const w=document.createElement('div');
+      w.style.display='flex'; w.style.animationDelay=`${i*0.05}s`; w.className='fadein';
       w.innerHTML=`<div class="bubble ${msg.role==='anon'?'bubble-anon':'bubble-me'}">${escapeHtml(msg.text)}<div class="bubble-time">${msg.ts?.toDate?timeAgo(msg.ts.toDate()):'maintenant'}</div></div>`;
       c.appendChild(w);
     });
     setTimeout(()=>{c.scrollTop=c.scrollHeight;},50);
   }
 
-  window.sendReply = async function() {
-    const input = document.getElementById('reply-input');
-    const text = input.value.trim();
-    if (!text || !currentMessageId) return;
+  window.sendReply=async function() {
+    const input=document.getElementById('reply-input');
+    const text=input.value.trim();
+    if (!text||!currentMessageId) return;
     currentConversation.push({role:'me',text,ts:new Date()});
     input.value=''; input.style.height='auto';
     renderOwnerChat();
-    await updateDoc(doc(db,"users",currentUser.uid,"messages",currentMessageId), {conversation:currentConversation,replied:true});
+    await updateDoc(doc(db,"users",currentUser.uid,"messages",currentMessageId),{conversation:currentConversation,replied:true});
   };
 
-  window.deleteMessage = async function() {
+  window.deleteMessage=async function() {
     if (!currentMessageId) return;
     await deleteDoc(doc(db,"users",currentUser.uid,"messages",currentMessageId));
     showToast('Supprimé ✓',true); showPage('main');
   };
 
   // ── ENVOI MESSAGE ANONYME ──
-  window.sendAnonMessage = async function() {
-    const text = document.getElementById('anon-message').value.trim();
-    const targetUser = document.getElementById('public-avatar').getAttribute('data-username');
+  window.sendAnonMessage=async function() {
+    const text=document.getElementById('anon-message').value.trim();
+    const targetUser=document.getElementById('public-avatar').getAttribute('data-username');
     if (!text) return showToast("Écris un message d'abord !");
-    const anonCount = parseInt(localStorage.getItem('nga_anon_count')||'0');
-    if (anonCount >= 3 && !auth.currentUser) {
-      window._pendingAnonMsg = { text, targetUser };
-      showPaywallModal(); return;
+    const count=parseInt(localStorage.getItem('nga_anon_count')||'0');
+    if (count>=3&&!auth.currentUser) {
+      window._pendingAnonMsg={text,targetUser}; showPaywallModal(); return;
     }
-    await _doSendAnon(text, targetUser);
+    await _doSendAnon(text,targetUser);
   };
 
-  async function _doSendAnon(text, targetUser) {
+  async function _doSendAnon(text,targetUser) {
     try {
-      const usersSnap = await getDocs(collection(db,"users"));
-      let targetUid = null;
-      usersSnap.forEach(d => { if (d.data().username===targetUser) targetUid=d.id; });
+      const usersSnap=await getDocs(collection(db,"users"));
+      let targetUid=null;
+      usersSnap.forEach(d=>{if(d.data().username===targetUser) targetUid=d.id;});
       if (!targetUid) return showToast('Utilisateur introuvable');
-      const hints = await captureHints();
-      const token = generateToken();
-      const msgRef = await addDoc(collection(db,"users",targetUid,"messages"), {
-        content:text, conversation:[{role:'anon',text,ts:new Date()}],
-        read:false, replied:false, token, exchangeCount:1,
-        createdAt:serverTimestamp(), hints
-      });
-      localStorage.setItem('nga_anon_count', parseInt(localStorage.getItem('nga_anon_count')||'0')+1);
-      const threadLink = `${APP_URL}?thread=${token}&uid=${targetUid}&mid=${msgRef.id}`;
-      window.currentThreadLink=threadLink;
-      window.currentThreadToken=token;
-      window.currentThreadUid=targetUid;
-      window.currentThreadMid=msgRef.id;
-      document.getElementById('thread-link-display').textContent=threadLink;
+
+      // Vérifier thread existant
+      const savedRaw=localStorage.getItem('nga_thread');
+      let existing=null;
+      if (savedRaw) {
+        try {
+          const s=JSON.parse(savedRaw);
+          if (s.uid===targetUid&&s.token&&s.mid) {
+            const eSnap=await getDoc(doc(db,"users",targetUid,"messages",s.mid));
+            if (eSnap.exists()&&eSnap.data().token===s.token) existing={...s,data:eSnap.data()};
+          }
+        } catch(_){localStorage.removeItem('nga_thread');}
+      }
+
+      if (existing) {
+        const updated=[...(existing.data.conversation||[]),{role:'anon',text,ts:new Date()}];
+        await updateDoc(doc(db,"users",targetUid,"messages",existing.mid),{conversation:updated,read:false,exchangeCount:(existing.data.exchangeCount||1)+1});
+        window.currentThreadLink=`${APP_URL}?thread=${existing.token}&uid=${targetUid}&mid=${existing.mid}`;
+        window.currentThreadToken=existing.token; window.currentThreadUid=targetUid; window.currentThreadMid=existing.mid;
+      } else {
+        const hints=await captureHints();
+        const token=generateToken();
+        const ref=await addDoc(collection(db,"users",targetUid,"messages"),{content:text,conversation:[{role:'anon',text,ts:new Date()}],read:false,replied:false,token,exchangeCount:1,createdAt:serverTimestamp(),hints});
+        localStorage.setItem('nga_anon_count',parseInt(localStorage.getItem('nga_anon_count')||'0')+1);
+        localStorage.setItem('nga_thread',JSON.stringify({token,uid:targetUid,mid:ref.id}));
+        window.currentThreadLink=`${APP_URL}?thread=${token}&uid=${targetUid}&mid=${ref.id}`;
+        window.currentThreadToken=token; window.currentThreadUid=targetUid; window.currentThreadMid=ref.id;
+      }
+
+      document.getElementById('thread-link-display').textContent=window.currentThreadLink;
       document.getElementById('anon-form-wrap').style.display='none';
       document.getElementById('sent-success').style.display='block';
-    } catch(e) { showToast('Erreur: '+e.message); }
+    } catch(e){showToast('Erreur: '+e.message);}
   }
 
   async function captureHints() {
-    const ua = navigator.userAgent;
+    const ua=navigator.userAgent;
     let device='Inconnu';
     if (/iPhone/.test(ua)) device='iPhone';
     else if (/iPad/.test(ua)) device='iPad';
-    else if (/Android/.test(ua)) { const m=ua.match(/Android [^;]+;\s*([^)]+)\)/); device=m?m[1].trim():'Android'; }
+    else if (/Android/.test(ua)){const m=ua.match(/Android [^;]+;\s*([^)]+)\)/);device=m?m[1].trim():'Android';}
     else if (/Windows/.test(ua)) device='Windows PC';
     else if (/Mac/.test(ua)) device='Mac';
-    let city='Inconnu', country='Inconnu';
-    try {
-      const res = await fetch('https://ip-api.com/json/?fields=city,country', {signal:AbortSignal.timeout(3000)});
-      if (res.ok) { const d=await res.json(); city=d.city||'Inconnu'; country=d.country||'Inconnu'; }
-    } catch(_) {}
-    return { device, city, country, capturedAt:new Date().toISOString() };
+    let city='Inconnu',country='Inconnu';
+    try {const r=await fetch('https://ip-api.com/json/?fields=city,country',{signal:AbortSignal.timeout(3000)});if(r.ok){const d=await r.json();city=d.city||'Inconnu';country=d.country||'Inconnu';}} catch(_){}
+    return {device,city,country,capturedAt:new Date().toISOString()};
   }
 
-  function showPaywallModal() { document.getElementById('paywall-modal').classList.add('show'); }
-  window.closePaywallModal = function() { document.getElementById('paywall-modal').classList.remove('show'); };
-
-  window.copyThreadLink = function() {
-    navigator.clipboard.writeText(window.currentThreadLink||'').then(()=>showToast('Lien copié 💜',true));
-  };
-  window.goToConversation = function() {
-    if (window.loadConversationByToken) window.loadConversationByToken(window.currentThreadToken,window.currentThreadUid,window.currentThreadMid);
-  };
-  window.resetAnonForm = function() {
-    document.getElementById('anon-message').value='';
-    document.getElementById('anon-form-wrap').style.display='block';
-    document.getElementById('sent-success').style.display='none';
-  };
-
   // ── CONVERSATION ANONYME ──
-  window.loadConversationByToken = async function(token, uid, mid) {
+  window.loadConversationByToken=async function(token,uid,mid) {
     try {
-      const snap = await getDoc(doc(db,"users",uid,"messages",mid));
-      if (!snap.exists() || snap.data().token !== token) return showToast('Lien invalide');
+      const snap=await getDoc(doc(db,"users",uid,"messages",mid));
+      if (!snap.exists()||snap.data().token!==token) return showToast('Lien invalide');
       currentThreadData=snap.data();
       window.currentThreadToken=token; window.currentThreadUid=uid; window.currentThreadMid=mid;
+      localStorage.setItem('nga_thread',JSON.stringify({token,uid,mid}));
       renderConversation(snap.data()); showPage('conversation');
-      onSnapshot(doc(db,"users",uid,"messages",mid), (s) => {
-        if (s.exists()) { currentThreadData=s.data(); renderConversation(s.data()); }
-      });
-    } catch(e) { showToast('Erreur: '+e.message); }
+      onSnapshot(doc(db,"users",uid,"messages",mid),(s)=>{if(s.exists()){currentThreadData=s.data();renderConversation(s.data());}});
+    } catch(e){showToast('Erreur: '+e.message);}
   };
 
   function renderConversation(data) {
-    const MAX=3;
-    const count=data.exchangeCount||1;
-    const remaining=MAX-Math.floor(count/2);
-    const dots=document.getElementById('exchange-dots');
-    dots.innerHTML='';
-    for (let i=0;i<MAX;i++) { const d=document.createElement('div'); d.className=`xdot ${i>=remaining?'used':''}`; dots.appendChild(d); }
-    document.getElementById('exchange-label').textContent=remaining>0?`${remaining} échange${remaining>1?'s':''} gratuit${remaining>1?'s':''} restant${remaining>1?'s':''}`:'Limite atteinte';
-    const c=document.getElementById('convo-messages');
-    c.innerHTML='';
-    (data.conversation||[]).forEach((msg,i) => {
-      const w=document.createElement('div');
-      w.style.display='flex'; w.style.animationDelay=`${i*0.06}s`; w.className='fadein';
+    const MAX=3; const count=data.exchangeCount||1; const remaining=MAX-Math.floor(count/2);
+    const dots=document.getElementById('exchange-dots'); dots.innerHTML='';
+    for(let i=0;i<MAX;i++){const d=document.createElement('div');d.className=`xdot ${i>=remaining?'used':''}`;dots.appendChild(d);}
+    document.getElementById('exchange-label').textContent=remaining>0?`${remaining} échange${remaining>1?'s':''} gratuit${remaining>1?'s':''} restant`:'Limite atteinte';
+    const c=document.getElementById('convo-messages'); c.innerHTML='';
+    (data.conversation||[]).forEach((msg,i)=>{
+      const w=document.createElement('div'); w.style.display='flex'; w.style.animationDelay=`${i*0.05}s`; w.className='fadein';
       const isMe=msg.role==='anon';
       w.innerHTML=`<div class="bubble ${isMe?'bubble-me':'bubble-anon'}">${escapeHtml(msg.text)}<div class="bubble-time">${msg.ts?.toDate?timeAgo(msg.ts.toDate()):'maintenant'}</div></div>`;
       c.appendChild(w);
     });
     setTimeout(()=>{c.scrollTop=c.scrollHeight;},50);
-    const bar=document.getElementById('convo-input-bar');
-    const pw=document.getElementById('paywall');
-    if (remaining<=0) { bar.style.display='none'; pw.classList.add('show'); }
-    else { bar.style.display='flex'; pw.classList.remove('show'); }
+    const bar=document.getElementById('convo-input-bar'); const pw=document.getElementById('paywall');
+    if(remaining<=0){bar.style.display='none';pw.classList.add('show');}
+    else{bar.style.display='flex';pw.classList.remove('show');}
   }
 
-  window.sendAnonReply = async function() {
-    const input=document.getElementById('convo-reply');
-    const text=input.value.trim();
+  window.sendAnonReply=async function() {
+    const input=document.getElementById('convo-reply'); const text=input.value.trim();
     if (!text||!window.currentThreadUid||!window.currentThreadMid) return;
-    const data=currentThreadData;
-    if (Math.floor((data.exchangeCount||1)/2)>=3) return;
-    const updated=[...(data.conversation||[]),{role:'anon',text,ts:new Date()}];
+    if (Math.floor((currentThreadData?.exchangeCount||1)/2)>=3) return;
+    const updated=[...(currentThreadData.conversation||[]),{role:'anon',text,ts:new Date()}];
     input.value=''; input.style.height='auto';
-    await updateDoc(doc(db,"users",window.currentThreadUid,"messages",window.currentThreadMid), {conversation:updated,exchangeCount:(data.exchangeCount||1)+1});
+    await updateDoc(doc(db,"users",window.currentThreadUid,"messages",window.currentThreadMid),{conversation:updated,exchangeCount:(currentThreadData.exchangeCount||1)+1});
   };
 
-  // ── PARTAGE — Compatible Web + APK Capacitor ──
-  function openExternalUrl(url) {
-    // Dans APK Capacitor : '_system' ouvre dans l'app externe
-    // Sur le web : ouvre un nouvel onglet
-    if (window.Capacitor !== undefined) {
-      window.open(url, '_system');
-    } else {
-      const a=document.createElement('a');
-      a.href=url; a.target='_blank'; a.rel='noopener';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    }
+  // ── PAYWALL MODAL ──
+  function showPaywallModal(){document.getElementById('paywall-modal').classList.add('show');showPaywallChoice();}
+  window.closePaywallModal=function(){document.getElementById('paywall-modal').classList.remove('show');};
+  window.showPaywallChoice=function(){document.getElementById('paywall-view-choice').style.display='block';document.getElementById('paywall-view-form').style.display='none';};
+  window.showPaywallForm=function(mode){
+    document.getElementById('paywall-view-choice').style.display='none';
+    document.getElementById('paywall-view-form').style.display='block';
+    const isReg=mode==='register';
+    document.getElementById('paywall-form-title').textContent=isReg?'Créer un compte':'Se connecter';
+    document.getElementById('paywall-submit-btn').textContent=isReg?'Créer mon compte':'Se connecter';
+    document.getElementById('paywall-submit-btn').setAttribute('data-mode',mode);
+    document.getElementById('paywall-username-field').style.display=isReg?'block':'none';
+    document.getElementById('paywall-switch').innerHTML=isReg
+      ?'Déjà un compte ? <a onclick="showPaywallForm(\'login\')" style="color:var(--red);cursor:pointer;font-weight:600">Se connecter</a>'
+      :'Pas de compte ? <a onclick="showPaywallForm(\'register\')" style="color:var(--red);cursor:pointer;font-weight:600">Créer un compte</a>';
+  };
+  window.handlePaywallAuth=async function(){
+    const mode=document.getElementById('paywall-submit-btn').getAttribute('data-mode');
+    const email=document.getElementById('paywall-email').value.trim();
+    const password=document.getElementById('paywall-password').value;
+    const username=document.getElementById('paywall-username').value.trim().toLowerCase().replace('@','');
+    if (!email||!password) return showToast('Remplis tous les champs');
+    try {
+      if (mode==='register'){
+        if (!username) return showToast("Choisis un nom d'utilisateur");
+        const cred=await createUserWithEmailAndPassword(auth,email,password);
+        await setDoc(doc(db,"users",cred.user.uid),{username,email,createdAt:serverTimestamp()});
+        currentUsername=username; window.currentUsername=username;
+      } else { await signInWithEmailAndPassword(auth,email,password); }
+      closePaywallModal(); localStorage.removeItem('nga_anon_count');
+      if (window._pendingAnonMsg){const{text,targetUser}=window._pendingAnonMsg;window._pendingAnonMsg=null;await _doSendAnon(text,targetUser);}
+    } catch(e){const m={'auth/email-already-in-use':'Email déjà utilisé','auth/weak-password':'Trop court (6 min)','auth/wrong-password':'Mot de passe incorrect','auth/user-not-found':'Compte introuvable'};showToast(m[e.code]||'Erreur: '+e.message);}
+  };
+
+  // ── PARTAGE ──
+  function openExternalUrl(url){
+    if(window.Capacitor!==undefined){window.open(url,'_system');}
+    else{const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();document.body.removeChild(a);}
   }
-
-  window.shareWhatsApp = function() {
-    const username=window.currentUsername||'';
-    if (!username) return showToast("Connecte-toi d'abord !");
-    const link=`${APP_URL}?u=${username}`;
-    openExternalUrl(`https://wa.me/?text=${encodeURIComponent('Envoie-moi un message anonyme 👻\n'+link)}`);
+  window.shareWhatsApp=function(){
+    if (!window.currentUsername) return showToast("Connecte-toi d'abord !");
+    openExternalUrl(`https://wa.me/?text=${encodeURIComponent('Envoie-moi un message anonyme 👻\n'+APP_URL+'?u='+window.currentUsername)}`);
   };
-
-  window.shareTelegram = function() {
-    const username=window.currentUsername||'';
-    if (!username) return showToast("Connecte-toi d'abord !");
-    const link=`${APP_URL}?u=${username}`;
-    openExternalUrl(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Envoie-moi un message anonyme 👻')}`);
+  window.shareTelegram=function(){
+    if (!window.currentUsername) return showToast("Connecte-toi d'abord !");
+    openExternalUrl(`https://t.me/share/url?url=${encodeURIComponent(APP_URL+'?u='+window.currentUsername)}&text=${encodeURIComponent('Envoie-moi un message anonyme 👻')}`);
   };
-
-  window.shareNative = function() {
-    const username=window.currentUsername||'';
-    if (!username) return showToast("Connecte-toi d'abord !");
-    const link=`${APP_URL}?u=${username}`;
-    if (navigator.share) { navigator.share({title:'NGA',text:'Envoie-moi un message anonyme 👻',url:link}).catch(()=>{}); }
+  window.shareNative=function(){
+    if (!window.currentUsername) return showToast("Connecte-toi d'abord !");
+    const link=`${APP_URL}?u=${window.currentUsername}`;
+    if(navigator.share){navigator.share({title:'NGA',text:'Envoie-moi un message anonyme 👻',url:link}).catch(()=>{});}
     else copyLink();
   };
-
-  window.copyLink = function() {
-    const username=window.currentUsername||'';
-    if (!username) return showToast("Connecte-toi d'abord !");
-    const link=`${APP_URL}?u=${username}`;
-    if (navigator.clipboard&&navigator.clipboard.writeText) {
+  window.copyLink=function(){
+    if (!window.currentUsername) return showToast("Connecte-toi d'abord !");
+    const link=`${APP_URL}?u=${window.currentUsername}`;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
       navigator.clipboard.writeText(link).then(()=>{
         const btn=document.getElementById('copy-link-btn');
-        if (btn) { btn.textContent='✓ Copié !'; btn.classList.add('copied'); setTimeout(()=>{btn.innerHTML='🔗 Copier le lien';btn.classList.remove('copied');},2000); }
+        if(btn){btn.textContent='✓ Copié !';btn.classList.add('copied');setTimeout(()=>{btn.textContent='🔗 Copier le lien';btn.classList.remove('copied');},2000);}
         showToast('Lien copié 💜',true);
       });
     } else {
-      const el=document.createElement('textarea'); el.value=link; el.style.position='fixed'; el.style.opacity='0';
-      document.body.appendChild(el); el.focus(); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+      const el=document.createElement('textarea');el.value=link;el.style.position='fixed';el.style.opacity='0';
+      document.body.appendChild(el);el.focus();el.select();document.execCommand('copy');document.body.removeChild(el);
       showToast('Lien copié 💜',true);
     }
   };
+  window.copyThreadLink=function(){navigator.clipboard.writeText(window.currentThreadLink||'').then(()=>showToast('Lien copié 💜',true));};
+  window.goToConversation=function(){if(window.loadConversationByToken)window.loadConversationByToken(window.currentThreadToken,window.currentThreadUid,window.currentThreadMid);};
+  window.resetAnonForm=function(){document.getElementById('anon-message').value='';document.getElementById('anon-form-wrap').style.display='block';document.getElementById('sent-success').style.display='none';};
+  window.clearSavedThread=function(){localStorage.removeItem('nga_thread');showPage('splash');showToast('Conversation oubliée');};
+  window.downloadApp=function(){if(/iPad|iPhone|iPod/.test(navigator.userAgent))downloadIOS();else downloadAndroid();};
+  window.downloadAndroid=function(){showToast('App bientôt sur Play Store !');};
+  window.downloadIOS=function(){showToast('App bientôt sur App Store !');};
+  window.onHintsClick=function(){const b=document.getElementById('hints-bar');if(b.getAttribute('data-locked')==='true')showToast('🔒 Premium pour voir les indices !');};
 
-  window.downloadApp = function() { if (/iPad|iPhone|iPod/.test(navigator.userAgent)) downloadIOS(); else downloadAndroid(); };
-  window.downloadAndroid = function() { showToast('App bientôt sur Play Store !'); };
-  window.downloadIOS = function() { showToast('App bientôt sur App Store !'); };
-
-  function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
-  function timeAgo(d) {
-    const diff=(Date.now()-d.getTime())/1000;
-    if (diff<60) return "à l'instant";
-    if (diff<3600) return `il y a ${Math.floor(diff/60)} min`;
-    if (diff<86400) return `il y a ${Math.floor(diff/3600)}h`;
-    return `il y a ${Math.floor(diff/86400)}j`;
-  }
-  function showToast(msg, ok=false) {
-    const t=document.getElementById('toast');
-    t.textContent=msg; t.className=`toast show ${ok?'ok':''}`;
-    setTimeout(()=>t.className='toast',2800);
-  }
+  function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+  function timeAgo(d){const diff=(Date.now()-d.getTime())/1000;if(diff<60)return"à l'instant";if(diff<3600)return`il y a ${Math.floor(diff/60)} min`;if(diff<86400)return`il y a ${Math.floor(diff/3600)}h`;return`il y a ${Math.floor(diff/86400)}j`;}
+  function showToast(msg,ok=false){const t=document.getElementById('toast');t.textContent=msg;t.className=`toast show ${ok?'ok':''}`;setTimeout(()=>t.className='toast',2800);}
   window.showToast=showToast;
 </script>
 
 <script>
   let authMode='register';
-  const cardBgs=[
-    'linear-gradient(160deg, #2d1b4e 0%, #3d2020 100%)',
-    'linear-gradient(160deg, #1a3a2e 0%, #1e2d4e 100%)',
-    'linear-gradient(160deg, #3d1a1a 0%, #4e2d1e 100%)',
-    'linear-gradient(160deg, #1a1a3d 0%, #2d1a4e 100%)',
-    'linear-gradient(160deg, #1e3d1a 0%, #3d3d1e 100%)',
-  ];
-  let bgIndex=0;
+  const cardGrads=['linear-gradient(135deg,#ff3b5c,#ff6b35)','linear-gradient(135deg,#7c5cfc,#c084fc)','linear-gradient(135deg,#06b6d4,#3b82f6)','linear-gradient(135deg,#10b981,#84cc16)','linear-gradient(135deg,#f59e0b,#ef4444)'];
+  let bgIdx=0;
 
-  // ── Détection URL au chargement ──
-  (function checkUrl() {
+  // ── Détection URL ──
+  (function checkUrl(){
     const p=new URLSearchParams(window.location.search);
-    const u=p.get('u'), thread=p.get('thread'), uid=p.get('uid'), mid=p.get('mid');
-    if (thread&&uid&&mid) {
+    const u=p.get('u'),thread=p.get('thread'),uid=p.get('uid'),mid=p.get('mid');
+    if(thread&&uid&&mid){
       setTimeout(()=>window.loadConversationByToken&&window.loadConversationByToken(thread,uid,mid),600);
-    } else if (u) {
+    } else if(u){
       const av=document.getElementById('public-avatar');
       av.textContent=u.charAt(0).toUpperCase();
       av.setAttribute('data-username',u);
+      // Compteur anonyme
+      const count=parseInt(localStorage.getItem('nga_anon_count')||'0');
+      const remaining=Math.max(0,3-count);
+      const wrap=document.getElementById('anon-counter-wrap');
+      if(wrap){
+        wrap.innerHTML=remaining>0
+          ?`<div class="anon-counter-box"><b>${remaining} message${remaining>1?'s':''}</b> anonyme${remaining>1?'s':''} gratuit${remaining>1?'s':''} restant</div>`
+          :`<div class="anon-counter-box" style="background:#fff0f0;border-color:#ffcdd2"><b style="color:var(--red)">⚠️ Limite atteinte</b> — connecte-toi pour continuer</div>`;
+      }
       showPage('public');
+    } else {
+      const saved=localStorage.getItem('nga_thread');
+      if(saved){try{const{token,uid,mid}=JSON.parse(saved);if(token&&uid&&mid)setTimeout(()=>window.loadConversationByToken&&window.loadConversationByToken(token,uid,mid),600);}catch(_){localStorage.removeItem('nga_thread');}}
     }
   })();
 
-  function showPage(name) {
+  function showPage(name){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     const pg=document.getElementById('page-'+name);
-    if (pg) pg.classList.add('active');
-    const area=pg?.querySelector('.scroll-area');
-    if (area) area.scrollTop=0;
+    if(pg){pg.classList.add('active');const a=pg.querySelector('.scroll-area');if(a)a.scrollTop=0;}
   }
   window.showPage=showPage;
 
-  function switchTab(name) {
+  function showAuthPage(mode){
+    authMode=mode; const isReg=mode==='register';
+    document.getElementById('auth-page-title').textContent=isReg?'Créer un compte':'Se connecter';
+    document.getElementById('auth-submit-btn').textContent=isReg?'Créer mon compte':'Se connecter';
+    document.getElementById('auth-submit-btn').setAttribute('data-mode',mode);
+    document.getElementById('auth-username-wrap').style.display=isReg?'block':'none';
+    document.getElementById('auth-switch-text').innerHTML=isReg
+      ?'Déjà un compte ? <a onclick="toggleAuth()">Se connecter</a>'
+      :'Pas de compte ? <a onclick="toggleAuth()">Créer un compte</a>';
+    showPage('auth');
+  }
+  window.showAuthPage=showAuthPage;
+
+  function toggleAuth(){showAuthPage(authMode==='register'?'login':'register');}
+  window.toggleAuth=toggleAuth;
+
+  function switchTab(name){
     document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.main-tab').forEach(b=>b.classList.remove('active'));
     const tc=document.getElementById('tab-'+name);
     const tb=document.getElementById('tab-'+name+'-btn');
-    if (tc) tc.classList.add('active');
-    if (tb) tb.classList.add('active');
+    if(tc)tc.classList.add('active'); if(tb)tb.classList.add('active');
   }
   window.switchTab=switchTab;
 
-  function selectPlatform(el) {
-    document.querySelectorAll('.platform-btn').forEach(b=>b.classList.remove('selected'));
-    el.classList.add('selected');
-  }
+  function selectPlatform(el){document.querySelectorAll('.platform-item').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');}
   window.selectPlatform=selectPlatform;
 
-  function toggleAuth() {
-    authMode=authMode==='register'?'login':'register';
-    const isReg=authMode==='register';
-    document.getElementById('auth-title').textContent=isReg?'Crée ton compte':'Connexion';
-    document.getElementById('auth-submit-btn').textContent=isReg?'Créer mon compte':'Se connecter';
-    document.getElementById('auth-switch-text').innerHTML=isReg
-      ?'Déjà un compte ? <a style="color:var(--accent);cursor:pointer" onclick="toggleAuth()">Se connecter</a>'
-      :'Pas de compte ? <a style="color:var(--accent);cursor:pointer" onclick="toggleAuth()">Créer un compte</a>';
-  }
-  window.toggleAuth=toggleAuth;
-
-  function pickPhoto() { document.getElementById('photo-input').click(); }
-  window.pickPhoto=pickPhoto;
-
-  function handlePhotoChange(e) {
-    const file=e.target.files[0]; if (!file) return;
-    const reader=new FileReader();
-    reader.onload=(ev)=>{
+  function handlePhotoChange(e){
+    const f=e.target.files[0]; if(!f)return;
+    const r=new FileReader();
+    r.onload=(ev)=>{
       const preview=document.getElementById('profile-photo-preview');
-      const cardImg=document.getElementById('card-avatar-img');
-      if (preview) { preview.src=ev.target.result; preview.style.display='block'; }
-      if (cardImg) { cardImg.src=ev.target.result; cardImg.style.display='block'; }
-      const letter=document.getElementById('card-avatar-letter');
-      if (letter) letter.style.display='none';
+      if(preview){preview.src=ev.target.result;preview.style.display='block';}
+      const ph=document.getElementById('photo-placeholder');
+      if(ph)ph.style.display='none';
     };
-    reader.readAsDataURL(file);
+    r.readAsDataURL(f);
   }
   window.handlePhotoChange=handlePhotoChange;
 
-  function randomBackground() {
-    bgIndex=(bgIndex+1)%cardBgs.length;
-    const bg=document.querySelector('.share-card-bg');
-    if (bg) bg.style.background=cardBgs[bgIndex];
+  function handlePhotoChange2(e){
+    const f=e.target.files[0]; if(!f)return;
+    const r=new FileReader();
+    r.onload=(ev)=>{
+      const img=document.getElementById('story-avatar-img');
+      if(img){img.src=ev.target.result;img.style.display='block';}
+      const letter=document.getElementById('story-avatar-letter');
+      if(letter)letter.style.display='none';
+    };
+    r.readAsDataURL(f);
+  }
+  window.handlePhotoChange2=handlePhotoChange2;
+
+  function randomBackground(){
+    bgIdx=(bgIdx+1)%cardGrads.length;
+    const bg=document.getElementById('story-card-bg');
+    if(bg)bg.style.background=cardGrads[bgIdx];
   }
   window.randomBackground=randomBackground;
 
-  function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,100)+'px'; }
+  function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
   window.autoResize=autoResize;
 
-  window.onHintsClick = function() {
-    const bar=document.getElementById('hints-bar');
-    if (bar.getAttribute('data-locked')==='true') showToast('🔒 Passe Premium pour voir les indices !');
-  };
-
-  // Compteur messages anonymes
-  (function() {
-    const count=parseInt(localStorage.getItem('nga_anon_count')||'0');
-    const remaining=Math.max(0,3-count);
-    const wrap=document.getElementById('anon-form-wrap');
-    if (wrap && !document.getElementById('anon-counter-el')) {
-      const el=document.createElement('div');
-      el.id='anon-counter-el'; el.className='anon-counter';
-      el.innerHTML=remaining>0
-        ?`<span>${remaining} message${remaining>1?'s':''} anonyme${remaining>1?'s':''}</span> gratuit${remaining>1?'s':''} restant`
-        :'⚠️ Limite atteinte — connecte-toi pour continuer';
-      wrap.insertBefore(el,wrap.firstChild);
-    }
-  })();
-
-  // Enter pour envoyer dans le chat
   document.addEventListener('keydown',(e)=>{
     const ri=document.getElementById('reply-input');
-    if (document.getElementById('page-chat').classList.contains('active')&&e.key==='Enter'&&!e.shiftKey&&document.activeElement===ri) {
-      e.preventDefault(); window.sendReply&&window.sendReply();
-    }
+    if(document.getElementById('page-chat').classList.contains('active')&&e.key==='Enter'&&!e.shiftKey&&document.activeElement===ri){e.preventDefault();window.sendReply&&window.sendReply();}
   });
 
   // ── PWA ──
   let deferredPrompt=null;
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
-  const isInStandaloneMode=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
-
-  window.addEventListener('beforeinstallprompt',(e)=>{
-    e.preventDefault(); deferredPrompt=e; window._pwaPrompt=e;
-    if (!isInStandaloneMode&&!sessionStorage.getItem('pwa-dismissed')) {
-      setTimeout(()=>document.getElementById('android-banner').classList.add('show'),3000);
-    }
-  });
-
-  window.installPWA=async function() {
-    const prompt=deferredPrompt||window._pwaPrompt;
-    if (!prompt) { showToast('Appuie sur ⋮ puis "Installer l\'application"'); return; }
-    try {
-      prompt.prompt();
-      const {outcome}=await prompt.userChoice;
-      if (outcome==='accepted') { document.getElementById('android-banner').classList.remove('show'); showToast('Application installée 🎉',true); }
-      deferredPrompt=null; window._pwaPrompt=null;
-    } catch(e) { showToast('Appuie sur ⋮ puis "Installer l\'application"'); }
-  };
-
-  window.dismissAndroidBanner=function() {
-    document.getElementById('android-banner').classList.remove('show');
-    sessionStorage.setItem('pwa-dismissed','1');
-  };
-
-  window.showIOSGuide=function() { document.getElementById('ios-guide').classList.add('show'); };
-  window.closeIOSGuide=function() { document.getElementById('ios-guide').classList.remove('show'); localStorage.setItem('ios-guide-shown','1'); };
-
-  if (isIOS&&!isInStandaloneMode&&!localStorage.getItem('ios-guide-shown')) {
-    window.addEventListener('load',()=>{
-      setTimeout(()=>{
-        const btn=document.createElement('button');
-        btn.innerHTML='📲 Installer sur iPhone';
-        btn.onclick=showIOSGuide;
-        btn.style.cssText=`position:fixed;bottom:calc(env(safe-area-inset-bottom,0px)+16px);left:50%;transform:translateX(-50%);background:var(--grad);color:white;border:none;border-radius:100px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;z-index:9996;white-space:nowrap;box-shadow:0 4px 20px #7c5cfc50;animation:slideUp 0.4s ease both`;
-        document.body.appendChild(btn);
-      },2000);
-    });
-  }
+  const isInStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+  window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;window._pwaPrompt=e;if(!isInStandalone&&!sessionStorage.getItem('pwa-dismissed'))setTimeout(()=>document.getElementById('android-banner').classList.add('show'),3000);});
+  window.installPWA=async function(){const p=deferredPrompt||window._pwaPrompt;if(!p){showToast('Appuie sur ⋮ → "Installer l\'application"');return;}try{p.prompt();const{outcome}=await p.userChoice;if(outcome==='accepted'){document.getElementById('android-banner').classList.remove('show');showToast('Installé 🎉',true);}deferredPrompt=null;window._pwaPrompt=null;}catch(e){showToast('Appuie sur ⋮ → "Installer l\'application"');}};
+  window.dismissAndroidBanner=function(){document.getElementById('android-banner').classList.remove('show');sessionStorage.setItem('pwa-dismissed','1');};
+  window.showIOSGuide=function(){document.getElementById('ios-guide').classList.add('show');};
+  window.closeIOSGuide=function(){document.getElementById('ios-guide').classList.remove('show');localStorage.setItem('ios-guide-shown','1');};
+  if(isIOS&&!isInStandalone&&!localStorage.getItem('ios-guide-shown')){window.addEventListener('load',()=>{setTimeout(()=>{const btn=document.createElement('button');btn.innerHTML='📲 Installer sur iPhone';btn.onclick=showIOSGuide;btn.style.cssText='position:fixed;bottom:calc(env(safe-area-inset-bottom,0px)+16px);left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff3b5c,#ff6b35);color:white;border:none;border-radius:100px;padding:12px 24px;font-family:Nunito,sans-serif;font-size:14px;font-weight:800;cursor:pointer;z-index:9996;white-space:nowrap;box-shadow:0 4px 20px rgba(255,59,92,0.4);animation:fadeUp 0.4s ease both';document.body.appendChild(btn);},2000);});}
 </script>
 </body>
 </html>
